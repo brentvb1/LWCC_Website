@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events Calendar – Living Word Christian Church</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #FFF8F0;
+      --coral:        #FF6B6B;
+      --coral-dark:   #E85555;
+      --green:        #2D6A4F;
+      --green-light:  #40916C;
+      --green-dark:   #1B4332;
+      --text:         #2C2C2C;
+      --muted:        #6B6B6B;
+      --white:        #FFFFFF;
+      --border:       rgba(0,0,0,.09);
+      --shadow:       0 4px 24px rgba(0,0,0,.10);
+      --radius:       14px;
+      --nav-h:        70px;
+      --ev-service:   #EF4444;
+      --ev-prayer:    #8B5CF6;
+      --ev-bible:     #3B82F6;
+      --ev-adult:     #059669;
+      --ev-youth:     #D97706;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-image: url('logo.jpg');
+      background-size: 100% auto;
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ════ NAV ════ */
+    nav { position: sticky; top: 0; z-index: 300; height: var(--nav-h); background: var(--green-dark); display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1rem,4vw,3rem); box-shadow: 0 2px 16px rgba(0,0,0,.25); }
+    .nav-logo { display: flex; align-items: center; gap: .7rem; text-decoration: none; transition: opacity .2s; }
+    .nav-logo:hover { opacity: .82; }
+    .nav-logo-icon { height: 54px; width: auto; flex-shrink: 0; background: #fff; padding: 3px 6px; border-radius: 4px; }
+    .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--white); line-height: 1.2; }
+    .nav-logo-text span { color: var(--coral); }
+    .nav-links { display: flex; align-items: center; gap: clamp(.8rem,2vw,2rem); list-style: none; }
+    .nav-links a { color: rgba(255,255,255,.85); text-decoration: none; font-size: .88rem; font-weight: 500; letter-spacing: .02em; transition: color .2s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--coral); }
+    .nav-links .nav-donate a { background: transparent; border: 2px solid rgba(255,255,255,.55); color: var(--white); padding: .45rem 1.1rem; border-radius: 100px; font-weight: 600; transition: background .2s, border-color .2s, transform .15s; }
+    .nav-links .nav-donate a:hover { background: rgba(255,255,255,.12); border-color: var(--white); transform: translateY(-1px); color: var(--white); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-trigger { display: inline-flex; align-items: center; gap: .3rem; background: none; border: none; color: rgba(255,255,255,.85); font-family: 'Inter', sans-serif; font-size: .88rem; font-weight: 500; cursor: pointer; padding: 0; white-space: nowrap; transition: color .2s; }
+    .nav-dropdown-trigger:hover { color: var(--coral); }
+    .nav-dropdown-trigger svg { width: 14px; height: 14px; fill: currentColor; transition: transform .25s; flex-shrink: 0; }
+    .nav-dropdown.open .nav-dropdown-trigger { color: var(--coral); }
+    .nav-dropdown.open .nav-dropdown-trigger svg { transform: rotate(180deg); }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%) translateY(-6px); background: var(--white); border-radius: 10px; min-width: 180px; box-shadow: 0 8px 32px rgba(0,0,0,.18); list-style: none; padding: .4rem 0; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 200; }
+    .nav-dropdown-menu::before { content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 6px solid var(--white); }
+    .nav-dropdown.open .nav-dropdown-menu { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+    .nav-dropdown-menu li a { display: flex; align-items: center; gap: .6rem; padding: .65rem 1.1rem; color: var(--green-dark); font-size: .88rem; font-weight: 500; text-decoration: none; border-radius: 6px; margin: .1rem .3rem; transition: background .15s, color .15s; white-space: nowrap; }
+    .nav-dropdown-menu li a svg { width: 15px; height: 15px; fill: var(--green); flex-shrink: 0; }
+    .nav-dropdown-menu li a:hover { background: rgba(45,106,79,.1); color: var(--green); }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .nav-toggle span { display: block; width: 26px; height: 2px; background: var(--white); border-radius: 2px; transition: transform .3s, opacity .3s; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ════ MAIN LAYOUT ════ */
+    .events-wrap {
+      max-width: 980px;
+      margin: 50vw auto 0;
+      padding: clamp(2rem,5vw,3.5rem) clamp(1rem,5vw,3rem) clamp(3rem,7vw,5rem);
+    }
+
+    /* ════ SECTION HEADING ════ */
+    .section-head { margin-bottom: 1.1rem; }
+    .section-eyebrow {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: rgba(45,106,79,.1); border: 1px solid rgba(45,106,79,.2);
+      color: var(--green-dark); font-size: .73rem; font-weight: 700;
+      letter-spacing: .11em; text-transform: uppercase;
+      padding: .28rem .85rem; border-radius: 100px;
+    }
+    .section-eyebrow svg { width: 13px; height: 13px; fill: var(--green); }
+
+    /* ════ ANNOUNCEMENT POSTCARDS ════ */
+    .announcements-section { margin-bottom: 2rem; }
+    .postcards-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+
+    .postcard {
+      border-radius: var(--radius); overflow: hidden; cursor: pointer;
+      background: rgba(255,255,255,.92); box-shadow: var(--shadow);
+      display: flex; flex-direction: column;
+      transition: transform .22s, box-shadow .22s;
+    }
+    .postcard:hover { transform: translateY(-4px); box-shadow: 0 10px 36px rgba(0,0,0,.16); }
+
+    .postcard-banner {
+      height: 88px; display: flex; align-items: center; justify-content: center;
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+    .postcard-banner svg { width: 38px; height: 38px; fill: rgba(255,255,255,.9); }
+
+    .postcard-body { padding: 1rem 1.1rem 1.2rem; flex: 1; display: flex; flex-direction: column; }
+    .postcard-tag { font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .4rem; }
+    .postcard-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--green-dark); margin-bottom: .5rem; line-height: 1.3; }
+    .postcard-teaser { font-size: .82rem; color: var(--muted); line-height: 1.55; flex: 1; margin-bottom: .9rem; }
+    .postcard-cta { font-size: .78rem; font-weight: 600; color: var(--green); display: inline-flex; align-items: center; gap: .3rem; }
+    .postcard-cta svg { width: 12px; height: 12px; fill: currentColor; }
+
+    @media (max-width: 750px) { .postcards-row { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 500px) { .postcards-row { grid-template-columns: 1fr; } }
+
+    /* ════ CALENDAR OUTER ════ */
+    .cal-outer {
+      background: rgba(255,255,255,.92); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden; margin-bottom: 1.5rem;
+    }
+
+    .cal-top {
+      background: var(--green-dark);
+      padding: 1.4rem clamp(1rem,4vw,2rem) 1.2rem;
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+
+    .cal-title-row {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: .6rem; margin-bottom: 1rem;
+    }
+
+    .cal-month-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem,3vw,1.9rem);
+      font-weight: 700; color: var(--white);
+    }
+
+    .cal-subtitle {
+      font-size: .75rem; color: rgba(255,255,255,.55);
+      font-weight: 500; letter-spacing: .04em;
+      margin-bottom: .25rem;
+    }
+
+    .cal-controls-row {
+      display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+    }
+
+    .cal-search { display: flex; align-items: center; gap: .35rem; }
+
+    .cal-sel {
+      background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28);
+      color: var(--white); border-radius: 8px; padding: .38rem .55rem;
+      font-size: .83rem; font-family: 'Inter', sans-serif; cursor: pointer;
+      appearance: none; -webkit-appearance: none;
+    }
+    .cal-sel option { background: #1B4332; color: #fff; }
+
+    .cal-btn {
+      background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.24);
+      color: var(--white); border-radius: 8px; padding: .38rem .75rem;
+      font-size: .83rem; font-family: 'Inter', sans-serif; cursor: pointer;
+      transition: background .18s; white-space: nowrap; font-weight: 500;
+    }
+    .cal-btn:hover { background: rgba(255,255,255,.26); }
+
+    .cal-nav { display: flex; align-items: center; gap: .3rem; }
+    .cal-nav-btn {
+      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.24); cursor: pointer;
+      transition: background .18s; color: var(--white); padding: 0;
+    }
+    .cal-nav-btn:hover { background: rgba(255,255,255,.28); }
+    .cal-nav-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+    .cal-sep { flex: 1; min-width: 4px; }
+
+    .cal-pdf-btn {
+      background: var(--coral); border: none; color: var(--white); border-radius: 8px;
+      padding: .38rem .9rem; font-size: .83rem; font-family: 'Inter', sans-serif;
+      font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: .4rem;
+      transition: background .18s; white-space: nowrap;
+    }
+    .cal-pdf-btn:hover { background: var(--coral-dark); }
+    .cal-pdf-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+    /* ════ PRINT HEADER (hidden on screen, shown on print) ════ */
+    .print-cal-header { display: none; }
+
+    /* ════ DAY-OF-WEEK HEADER ROW ════ */
+    .cal-dow-row {
+      display: grid; grid-template-columns: repeat(7,1fr);
+      background: rgba(27,67,50,.06); border-bottom: 1px solid var(--border);
+    }
+    .cal-dow-cell {
+      padding: .55rem 0; text-align: center;
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--green-dark);
+    }
+
+    /* ════ CALENDAR GRID ════ */
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); }
+
+    .cal-cell {
+      min-height: 115px; border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: .38rem .42rem; position: relative;
+      transition: background .14s;
+    }
+    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-cell.cur-month { cursor: pointer; }
+    .cal-cell.cur-month:hover { background: rgba(45,106,79,.045); }
+    .cal-cell.other-month { background: rgba(0,0,0,.018); cursor: default; }
+
+    .cal-day-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; font-weight: 600; color: var(--text); margin-bottom: .22rem;
+    }
+    .cal-cell.other-month .cal-day-num { color: rgba(0,0,0,.22); }
+    .cal-cell.is-today .cal-day-num { background: var(--coral); color: #fff; }
+
+    .cal-chip-list { display: flex; flex-direction: column; gap: 2px; }
+    .event-chip {
+      border-radius: 4px; padding: 2px 5px;
+      font-size: .68rem; font-weight: 600; line-height: 1.45;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      color: #fff;
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+
+    @media (max-width: 620px) {
+      .cal-cell { min-height: 72px; padding: .25rem .28rem; }
+      .cal-day-num { width: 22px; height: 22px; font-size: .7rem; }
+      .event-chip { font-size: .58rem; padding: 1px 4px; }
+    }
+
+    /* ════ LEGEND ════ */
+    .legend-card {
+      background: rgba(255,255,255,.92); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.1rem 1.5rem; margin-bottom: 1.5rem;
+    }
+    .legend-label {
+      font-size: .7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--muted); margin-bottom: .75rem;
+    }
+    .legend-row { display: flex; flex-wrap: wrap; gap: .55rem; }
+    .legend-item { display: flex; align-items: center; gap: .4rem; font-size: .82rem; color: var(--text); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+
+    /* ════ DAY MODAL ════ */
+    .day-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.52); z-index: 500;
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+      opacity: 0; pointer-events: none; transition: opacity .22s;
+    }
+    .day-overlay.open { opacity: 1; pointer-events: auto; }
+    .day-modal {
+      background: var(--white); border-radius: var(--radius); width: 100%; max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.28); overflow: hidden;
+      transform: translateY(14px) scale(.97); transition: transform .22s;
+    }
+    .day-overlay.open .day-modal { transform: none; }
+    .day-modal-head {
+      background: var(--green-dark); padding: 1.3rem 1.5rem;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    }
+    .day-modal-date { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--white); }
+    .day-modal-body { padding: 1.3rem 1.5rem 1.7rem; }
+    .day-event-item {
+      display: flex; align-items: flex-start; gap: .85rem;
+      padding: .8rem 0; border-bottom: 1px solid var(--border);
+    }
+    .day-event-item:last-child { border-bottom: none; }
+    .day-event-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+    .day-event-name { font-size: .95rem; font-weight: 600; color: var(--green-dark); margin-bottom: .15rem; }
+    .day-event-time { font-size: .8rem; color: var(--muted); }
+    .day-no-events { font-size: .9rem; color: var(--muted); font-style: italic; padding: .5rem 0; }
+    .modal-x {
+      background: rgba(255,255,255,.15); border: none; border-radius: 50%;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; transition: background .18s;
+    }
+    .modal-x:hover { background: rgba(255,255,255,.28); }
+    .modal-x svg { width: 15px; height: 15px; fill: var(--white); }
+
+    /* ════ ANNOUNCEMENT MODAL ════ */
+    .annmt-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.52); z-index: 510;
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+      opacity: 0; pointer-events: none; transition: opacity .22s;
+    }
+    .annmt-overlay.open { opacity: 1; pointer-events: auto; }
+    .annmt-modal {
+      background: var(--white); border-radius: var(--radius); width: 100%; max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.28); overflow: hidden; max-height: 90vh; overflow-y: auto;
+      transform: translateY(14px) scale(.97); transition: transform .22s;
+    }
+    .annmt-overlay.open .annmt-modal { transform: none; }
+    .annmt-head {
+      padding: 1.4rem 1.5rem;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+    .annmt-head-tag { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.7); margin-bottom: .35rem; }
+    .annmt-head-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--white); line-height: 1.25; }
+    .annmt-body { padding: 1.4rem 1.5rem 1.8rem; }
+    .annmt-meta { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1.2rem; }
+    .annmt-meta-row { display: flex; align-items: flex-start; gap: .6rem; font-size: .85rem; }
+    .annmt-meta-row svg { width: 15px; height: 15px; fill: var(--green); flex-shrink: 0; margin-top: 2px; }
+    .annmt-meta-key { font-weight: 600; color: var(--green-dark); min-width: 70px; }
+    .annmt-meta-val { color: var(--text); }
+    .annmt-desc { font-size: .9rem; color: var(--text); line-height: 1.8; border-top: 1px solid var(--border); padding-top: 1rem; }
+
+    /* ════ ABOUT MODAL ════ */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal { background: var(--white); border-radius: var(--radius); width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.3); overflow: hidden; transform: translateY(16px) scale(.97); transition: transform .25s; }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-header { background: var(--green-dark); padding: 1.4rem 1.6rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .modal-header-text h3 { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.25rem; font-weight: 700; margin-bottom: .2rem; }
+    .modal-header-text p { color: rgba(255,255,255,.65); font-size: .82rem; }
+    .modal-close { background: rgba(255,255,255,.15); border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background .2s; }
+    .modal-close:hover { background: rgba(255,255,255,.28); }
+    .modal-close svg { width: 16px; height: 16px; fill: var(--white); }
+    .modal-body { padding: 1.4rem 1.6rem 1.8rem; }
+    .modal-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.1rem; border-radius: 10px; text-decoration: none; transition: background .15s, transform .15s; margin-bottom: .6rem; }
+    .modal-option:last-child { margin-bottom: 0; }
+    .modal-option:hover { background: rgba(45,106,79,.08); transform: translateX(4px); }
+    .modal-option-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .modal-option-icon.green { background: rgba(45,106,79,.12); }
+    .modal-option-icon.coral { background: rgba(255,107,107,.12); }
+    .modal-option-icon svg { width: 22px; height: 22px; }
+    .modal-option-icon.green svg { fill: var(--green); }
+    .modal-option-icon.coral svg { fill: var(--coral); }
+    .modal-option-text strong { display: block; font-size: .97rem; font-weight: 600; color: var(--green-dark); margin-bottom: .15rem; }
+    .modal-option-text span { font-size: .8rem; color: var(--muted); }
+    .modal-option-arrow { margin-left: auto; width: 18px; height: 18px; fill: var(--muted); flex-shrink: 0; transition: fill .15s; }
+    .modal-option:hover .modal-option-arrow { fill: var(--green); }
+
+    /* ════ FOOTER ════ */
+    footer { background: #111; color: rgba(255,255,255,.65); padding: clamp(2rem,5vw,3.5rem) clamp(1rem,5vw,3rem); font-size: .85rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
+    .footer-brand h3 { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.1rem; margin-bottom: .5rem; }
+    .footer-brand p { line-height: 1.7; max-width: 260px; }
+    .footer-col h4 { color: var(--white); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .9rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
+    .footer-col ul a { color: rgba(255,255,255,.6); text-decoration: none; transition: color .2s; }
+    .footer-col ul a:hover { color: var(--coral); }
+    .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+    .footer-social { display: flex; gap: .7rem; }
+    .footer-social a { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center; transition: background .2s; text-decoration: none; }
+    .footer-social a:hover { background: rgba(255,255,255,.2); }
+    .footer-social svg { width: 15px; height: 15px; fill: rgba(255,255,255,.7); }
+    .footer-social a:hover svg { fill: #fff; }
+
+    /* ════ RESPONSIVE ════ */
+    @media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      nav { padding: 0 1.2rem; }
+      .nav-links { display: none; position: absolute; top: var(--nav-h); left: 0; right: 0; background: var(--green-dark); flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 1.5rem; gap: .1rem; border-top: 1px solid rgba(255,255,255,.08); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a { display: block; padding: .7rem 0; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+      .nav-links li:last-child a { border-bottom: none; }
+      .nav-links .nav-donate a { display: inline-flex; margin-top: .5rem; border-bottom: none; }
+      .nav-toggle { display: flex; }
+      .nav-dropdown-trigger { display: flex; padding: .7rem 0; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,.06); width: 100%; justify-content: space-between; }
+      .nav-dropdown-menu { position: static; transform: none; box-shadow: none; background: rgba(255,255,255,.06); border-radius: 8px; margin: .3rem 0 .4rem; padding: .2rem 0; opacity: 1; pointer-events: none; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+      .nav-dropdown-menu::before { display: none; }
+      .nav-dropdown.open .nav-dropdown-menu { max-height: 300px; pointer-events: auto; transform: none; }
+      .nav-dropdown-menu li a { color: rgba(255,255,255,.8); margin: 0; border-radius: 0; padding: .6rem 1rem; font-size: .95rem; border-bottom: none; }
+      .nav-dropdown-menu li a svg { fill: rgba(255,255,255,.6); }
+      .nav-dropdown-menu li a:hover { background: rgba(255,255,255,.08); color: var(--coral); }
+      .cal-controls-row { flex-direction: column; align-items: flex-start; }
+      .cal-sep { display: none; }
+    }
+    @media (max-width: 480px) {
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; border-radius: 4px; }
+
+    /* ════ HERO PAGE LABEL ════ */
+    body { position: relative; }
+    .page-hero-label { position: absolute; top: calc(var(--nav-h) + 4vw); left: 0; right: 0; text-align: center; pointer-events: none; z-index: 1; }
+    .page-hero-label h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.6); letter-spacing: .04em; }
+
+    /* ════ PRINT STYLES ════ */
+    @media print {
+      @page { size: 8.5in 11in portrait; margin: 0.5in; }
+
+      nav, footer, .announcements-section, .legend-card,
+      .cal-controls-row, .cal-pdf-btn, .day-overlay,
+      .annmt-overlay, .modal-overlay { display: none !important; }
+
+      body { background: none !important; background-image: none !important; }
+
+      .events-wrap { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+
+      .cal-outer { box-shadow: none !important; border-radius: 0 !important; }
+
+      .cal-top { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+
+      .print-cal-header {
+        display: block !important;
+        font-family: 'Inter', sans-serif; font-size: 9pt;
+        color: rgba(255,255,255,.65); margin-bottom: 4pt;
+        letter-spacing: .05em; text-transform: uppercase;
+      }
+
+      .cal-cell { min-height: 90pt; border: 0.5pt solid #ccc !important; }
+      .cal-cell.cur-month:hover { background: none; }
+
+      .event-chip {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        white-space: normal !important; overflow: visible !important;
+        font-size: 7pt !important;
+      }
+
+      .cal-dow-cell { font-size: 8pt; }
+      .cal-day-num { font-size: 9pt; }
+      .cal-cell.is-today .cal-day-num { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav aria-label="Main navigation">
+    <a href="index.html" class="nav-logo" aria-label="Living Word Christian Church home">
+      <img src="logo.jpg" class="nav-logo-icon" alt="LWCC">
+      <span class="nav-logo-text">LWCC</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu" id="navToggle">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-menu" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li class="nav-dropdown" id="aboutDropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="about-menu" id="aboutToggle">About Us<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <ul class="nav-dropdown-menu" id="about-menu" role="menu">
+          <li role="none"><a href="our_pastors.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Our Pastors</a></li>
+          <li role="none"><a href="our_beliefs.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>Our Beliefs</a></li>
+        </ul>
+      </li>
+      <li class="nav-dropdown" id="ministriesDropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="ministries-menu" id="ministriesToggle">Ministries<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <ul class="nav-dropdown-menu" id="ministries-menu" role="menu">
+          <li role="none"><a href="childrens_ministry.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>Children's Ministry</a></li>
+          <li role="none"><a href="youth_group.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Youth Group</a></li>
+          <li role="none"><a href="adult_ministry.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Adult Ministry</a></li>
+          <li role="none"><a href="fellowship.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>Fellowships</a></li>
+        </ul>
+      </li>
+      <li class="nav-dropdown" id="resourcesDropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="resources-menu" id="resourcesToggle">Resources<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <ul class="nav-dropdown-menu" id="resources-menu" role="menu">
+          <li role="none"><a href="audio_archive.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>Audio Archive</a></li>
+          <li role="none"><a href="bible.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>Online Bible</a></li>
+          <li role="none"><a href="sermons.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V6h10v2z"/></svg>Sermons</a></li>
+          <li role="none"><a href="events_calendar.html" role="menuitem" aria-current="page"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>Events Calendar</a></li>
+          <li role="none"><a href="prayer_request.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M14.5 2.5c0 1.5-1.5 7-1.5 7h-2C10.5 9.5 9 4 9 2.5a2.5 2.5 0 015 0zM12 17c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-2c1.4 0 4 .7 4 2v1H8v-1c0-1.3 2.6-2 4-2z"/></svg>Prayer Request</a></li>
+        </ul>
+      </li>
+      <li class="nav-donate"><a href="donate.html">Donations</a></li>
+      <li><a href="find_us.html">Find Us</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-hero-label" aria-hidden="true"><h2>Events Calendar</h2></div>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="events-wrap" aria-label="Events Calendar">
+
+    <!-- ANNOUNCEMENTS -->
+    <section class="announcements-section" aria-label="Announcements">
+      <div class="section-head">
+        <div class="section-eyebrow">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          Announcements
+        </div>
+      </div>
+      <div class="postcards-row">
+
+        <!-- Postcard 1: Emerge -->
+        <div class="postcard" role="button" tabindex="0" aria-label="Emerge Youth Event – click for details" data-annmt="0">
+          <div class="postcard-banner" style="background: linear-gradient(135deg, #FF6B6B 0%, #E85555 100%);">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          </div>
+          <div class="postcard-body">
+            <div class="postcard-tag">Youth &middot; Grades 7–12</div>
+            <div class="postcard-title">Emerge Youth Event</div>
+            <p class="postcard-teaser">An overnight retreat for teens featuring worship, small groups, outdoor activities, and powerful messages.</p>
+            <span class="postcard-cta">Learn More <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Postcard 2: Christmas Program -->
+        <div class="postcard" role="button" tabindex="0" aria-label="Children's Christmas Program – click for details" data-annmt="1">
+          <div class="postcard-banner" style="background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>
+          </div>
+          <div class="postcard-body">
+            <div class="postcard-tag">Children &middot; All Families Welcome</div>
+            <div class="postcard-title">Christmas Program 2026</div>
+            <p class="postcard-teaser">Watch our children shine with songs, Scripture readings, and a mini nativity play celebrating Christ's birth.</p>
+            <span class="postcard-cta">Learn More <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Postcard 3: Kingdom Store -->
+        <div class="postcard" role="button" tabindex="0" aria-label="Kingdom Store Day – click for details" data-annmt="2">
+          <div class="postcard-banner" style="background: linear-gradient(135deg, #D97706 0%, #B45309 100%);">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36 0-2.56-2.09-4.64-4.64-4.64-1.37 0-2.58.56-3.45 1.47L8 3.39 6.09 1.47C5.22.56 4.01 0 2.64 0 .09 0-2 2.08-2 4.64c0 .48.11.92.18 1.36H-4v2h24V6zm-8.36 0H8.36c-.07-.44-.36-.78-.36-1.36 0-1.45 1.19-2.64 2.64-2.64.74 0 1.41.3 1.91.79L14 4.36c-.01.58-.3.92-.36 1.64zM4 8v12h16V8H4zm8 11l-5-5 1.41-1.41L12 16.17l7.59-7.58L21 10l-9 9z"/></svg>
+          </div>
+          <div class="postcard-body">
+            <div class="postcard-tag">Children's Ministry &middot; Ages 5–15</div>
+            <div class="postcard-title">Kingdom Store Day</div>
+            <p class="postcard-teaser">Children redeem their Kingdom Coins for prizes, candy, toys, and stuffed animals — a quarterly celebration!</p>
+            <span class="postcard-cta">Learn More <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CALENDAR SECTION HEADING -->
+    <div class="section-head">
+      <div class="section-eyebrow">
+        <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+        Events Calendar
+      </div>
+    </div>
+
+    <!-- CALENDAR CARD -->
+    <div class="cal-outer" role="region" aria-label="Monthly calendar">
+
+      <div class="cal-top">
+        <div class="cal-title-row">
+          <div>
+            <div class="cal-subtitle">Living Word Christian Church</div>
+            <div class="cal-month-title" id="calTitle">May 2026</div>
+          </div>
+        </div>
+        <div class="cal-controls-row">
+          <!-- Search -->
+          <div class="cal-search">
+            <select class="cal-sel" id="monthSel" aria-label="Select month"></select>
+            <select class="cal-sel" id="yearSel" aria-label="Select year"></select>
+            <button class="cal-btn" id="goBtn">Go</button>
+          </div>
+          <!-- Nav -->
+          <div class="cal-nav">
+            <button class="cal-nav-btn" id="prevBtn" aria-label="Previous month">
+              <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+            </button>
+            <button class="cal-btn" id="todayBtn">Today</button>
+            <button class="cal-nav-btn" id="nextBtn" aria-label="Next month">
+              <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+          </div>
+          <div class="cal-sep"></div>
+          <!-- PDF -->
+          <button class="cal-pdf-btn" id="pdfBtn" aria-label="Export to PDF">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Export PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Print-only header -->
+      <div class="print-cal-header" id="printHeader">Living Word Christian Church — Events Calendar</div>
+
+      <!-- Day-of-week headers -->
+      <div class="cal-dow-row" aria-hidden="true">
+        <div class="cal-dow-cell">Sun</div>
+        <div class="cal-dow-cell">Mon</div>
+        <div class="cal-dow-cell">Tue</div>
+        <div class="cal-dow-cell">Wed</div>
+        <div class="cal-dow-cell">Thu</div>
+        <div class="cal-dow-cell">Fri</div>
+        <div class="cal-dow-cell">Sat</div>
+      </div>
+
+      <!-- Calendar grid — populated by JS -->
+      <div class="cal-grid" id="calGrid" role="grid" aria-label="Calendar days"></div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend-card" role="region" aria-label="Event legend">
+      <div class="legend-label">Event Legend</div>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--ev-service)"></div>Sunday Service &nbsp;10:00 AM – 12:00 PM</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--ev-prayer)"></div>Prayer &amp; Praise &nbsp;6:00 PM – 7:00 PM</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--ev-bible)"></div>Bible Study &nbsp;6:00 PM – 7:00 PM</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--ev-adult)"></div>Adult Ministry &nbsp;6:00 PM – 7:00 PM</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--ev-youth)"></div>Youth Group &nbsp;4:00 PM – 6:00 PM &nbsp;(Oct – May)</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ═══ DAY DETAIL MODAL ═══ -->
+  <div class="day-overlay" id="dayOverlay" role="dialog" aria-modal="true" aria-labelledby="dayTitle">
+    <div class="day-modal" id="dayModal">
+      <div class="day-modal-head">
+        <div class="day-modal-date" id="dayTitle"></div>
+        <button class="modal-x" id="dayClose" aria-label="Close">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+      <div class="day-modal-body" id="dayBody"></div>
+    </div>
+  </div>
+
+  <!-- ═══ ANNOUNCEMENT MODAL ═══ -->
+  <div class="annmt-overlay" id="annmtOverlay" role="dialog" aria-modal="true" aria-labelledby="annmtTitle">
+    <div class="annmt-modal" id="annmtModal">
+      <div class="annmt-head" id="annmtHead">
+        <div>
+          <div class="annmt-head-tag" id="annmtTag"></div>
+          <div class="annmt-head-title" id="annmtTitle"></div>
+        </div>
+        <button class="modal-x" id="annmtClose" aria-label="Close">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+      <div class="annmt-body" id="annmtBody"></div>
+    </div>
+  </div>
+
+  <!-- ═══ ABOUT US MODAL ═══ -->
+  <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-label="About Us">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-header-text"><h3>About Us</h3><p>Learn more about our church family</p></div>
+        <button class="modal-close" id="modalClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+      </div>
+      <div class="modal-body">
+        <a href="our_pastors.html" class="modal-option">
+          <div class="modal-option-icon green"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+          <div class="modal-option-text"><strong>Our Pastors</strong><span>Meet the leadership team guiding our congregation</span></div>
+          <svg class="modal-option-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </a>
+        <a href="our_beliefs.html" class="modal-option">
+          <div class="modal-option-icon coral"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+          <div class="modal-option-text"><strong>Our Beliefs</strong><span>Discover the core doctrines that anchor our faith</span></div>
+          <svg class="modal-option-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>Living Word Christian Church</h3>
+        <p>A community rooted in Scripture, alive in worship, and sent to serve. Everyone welcome.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#" id="footerAboutLink">About Us</a></li>
+          <li><a href="ministries.html">Ministries</a></li>
+          <li><a href="bible.html">Online Bible</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul role="list">
+          <li><a href="donate.html">Donations</a></li>
+          <li><a href="prayer_request.html">Prayer Requests</a></li>
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Us</h4>
+        <ul role="list">
+          <li><a href="#">950 West 725 South</a></li>
+          <li><a href="#">Vernal, Utah 84078</a></li>
+          <li><a href="https://www.google.com/maps?q=40.444944,-109.547417" target="_blank" rel="noopener noreferrer">&#x1F4CD; View on Map</a></li>
+          <li><a href="#">Sunday Service: 10:00 am</a></li>
+          <li><a href="#">Thursday: 6:00 pm</a></li>
+          <li><a href="tel:4357732255">(435) 773-2255</a></li>
+          <li><a href="mailto:LWCCutah@gmail.com">LWCCutah@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Living Word Christian Church. All rights reserved.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path fill="#111" d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="#111" stroke-width="2" stroke-linecap="round"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon fill="#111" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  // ════ CONSTANTS ════
+  const TODAY     = new Date();
+  const CUR_YEAR  = TODAY.getFullYear();
+  const END_YEAR  = CUR_YEAR + 15;
+  const MONTHS    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  const EVT = {
+    SERVICE: { id:'service', label:'Sunday Service',  time:'10:00 AM – 12:00 PM', color:'#EF4444' },
+    PRAYER:  { id:'prayer',  label:'Prayer & Praise', time:'6:00 PM – 7:00 PM',   color:'#8B5CF6' },
+    BIBLE:   { id:'bible',   label:'Bible Study',     time:'6:00 PM – 7:00 PM',   color:'#3B82F6' },
+    ADULT:   { id:'adult',   label:'Adult Ministry',  time:'6:00 PM – 7:00 PM',   color:'#059669' },
+    YOUTH:   { id:'youth',   label:'Youth Group',     time:'4:00 PM – 6:00 PM',   color:'#D97706' },
+  };
+
+  const ANNOUNCEMENTS = [
+    {
+      color: '#E85555',
+      tag: 'Youth · Grades 7–12',
+      title: 'Emerge Youth Event',
+      meta: [
+        { icon: 'calendar', key: 'When',    val: 'Watch for upcoming announcements' },
+        { icon: 'clock',    key: 'Time',    val: 'TBA' },
+        { icon: 'people',   key: 'Who',     val: 'Grades 7–12' },
+        { icon: 'person',   key: 'Contact', val: 'Gavin & Gracie Wilkins' },
+      ],
+      body: 'Emerge is an exciting overnight retreat designed specifically for teens in grades 7 through 12. Join us for a weekend of powerful worship, engaging small group discussions, outdoor activities, and inspiring messages that will challenge and encourage your faith. Scan the QR code on the Youth Group page to learn more and register. Limited spots available — don\'t miss out on this life-changing experience!'
+    },
+    {
+      color: '#2D6A4F',
+      tag: 'Children · All Families Welcome',
+      title: 'Christmas Program 2026',
+      meta: [
+        { icon: 'calendar', key: 'When',     val: 'December 21, 2026' },
+        { icon: 'clock',    key: 'Time',     val: '10:00 AM – 12:00 PM (during Sunday Service)' },
+        { icon: 'people',   key: 'Who',      val: 'All families and friends welcome' },
+        { icon: 'location', key: 'Location', val: 'Main Sanctuary' },
+      ],
+      body: 'The Children\'s Ministry is thrilled to present our Annual Christmas Program! Children ages 5–15 will perform worship songs, share Scripture readings, and act out a mini nativity play celebrating the birth of Jesus Christ. Come support our young performers and celebrate the true reason for the season. Light refreshments will be served in the fellowship hall following the program.'
+    },
+    {
+      color: '#B45309',
+      tag: 'Children\'s Ministry · Ages 5–15',
+      title: 'Kingdom Store Day',
+      meta: [
+        { icon: 'calendar', key: 'When',     val: 'First Sunday of each quarter' },
+        { icon: 'clock',    key: 'Time',     val: 'During Children\'s Ministry class' },
+        { icon: 'people',   key: 'Who',      val: 'Ages 5–15' },
+        { icon: 'location', key: 'Location', val: 'Children\'s Ministry Room' },
+      ],
+      body: 'Throughout the quarter, children earn "Kingdom Coins" for attendance, good behavior, helpfulness, evangelism, and participation in class. On Kingdom Store Day, children bring their saved coins to browse our specially curated store filled with small toys, candy, board games, and stuffed animals. It is a wonderful celebration of their dedication, growth, and faithfulness — encourage your kids to save their coins!'
+    },
+  ];
+
+  // ════ EVENT HELPERS ════
+  function daysOfWeekInMonth(year, month, dow) {
+    const arr = [];
+    const d = new Date(year, month, 1);
+    while (d.getDay() !== dow) d.setDate(d.getDate() + 1);
+    while (d.getMonth() === month) { arr.push(d.getDate()); d.setDate(d.getDate() + 7); }
+    return arr;
+  }
+
+  function getEventsForDate(year, month, day) {
+    const dow = new Date(year, month, day).getDay();
+    const evts = [];
+
+    if (dow === 0) evts.push(EVT.SERVICE);
+
+    if (dow === 4) {
+      const thursdays = daysOfWeekInMonth(year, month, 4);
+      const idx = thursdays.indexOf(day);
+      if (idx === 0) evts.push(EVT.PRAYER);
+      if (idx === 1) evts.push(EVT.BIBLE);
+      if (idx === 2) evts.push(EVT.ADULT);
+      if (thursdays.length >= 5) {
+        if (idx === 3 || idx === 4) evts.push(EVT.PRAYER);
+      } else {
+        if (idx === 3) evts.push(EVT.PRAYER);
+      }
+    }
+
+    if (dow === 0) {
+      const youthSeason = month <= 4 || month >= 9;
+      if (youthSeason) {
+        const sundays = daysOfWeekInMonth(year, month, 0);
+        const idx = sundays.indexOf(day);
+        if (idx === 1 || idx === 3) evts.push(EVT.YOUTH);
+      }
+    }
+
+    return evts;
+  }
+
+  // ════ CALENDAR STATE ════
+  let viewYear  = TODAY.getFullYear();
+  let viewMonth = TODAY.getMonth();
+
+  // ════ POPULATE SELECTS ════
+  function populateSelects() {
+    const mSel = document.getElementById('monthSel');
+    const ySel = document.getElementById('yearSel');
+    MONTHS.forEach((m, i) => {
+      const opt = document.createElement('option');
+      opt.value = i; opt.textContent = m; mSel.appendChild(opt);
+    });
+    for (let y = CUR_YEAR; y <= END_YEAR; y++) {
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y; ySel.appendChild(opt);
+    }
+  }
+
+  // ════ RENDER CALENDAR ════
+  function renderCalendar(year, month) {
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = '';
+
+    const firstDow    = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrev  = new Date(year, month, 0).getDate();
+
+    function makeCell(day, displayDay, isCur, evts) {
+      const cell = document.createElement('div');
+      const isToday = isCur && year === TODAY.getFullYear() && month === TODAY.getMonth() && day === TODAY.getDate();
+      cell.className = 'cal-cell' + (isCur ? ' cur-month' : ' other-month') + (isToday ? ' is-today' : '');
+
+      const numEl = document.createElement('div');
+      numEl.className = 'cal-day-num';
+      numEl.textContent = displayDay;
+      cell.appendChild(numEl);
+
+      if (isCur && evts && evts.length) {
+        const chipList = document.createElement('div');
+        chipList.className = 'cal-chip-list';
+        evts.forEach(e => {
+          const chip = document.createElement('div');
+          chip.className = 'event-chip';
+          chip.style.backgroundColor = e.color;
+          chip.textContent = e.label;
+          chipList.appendChild(chip);
+        });
+        cell.appendChild(chipList);
+      }
+
+      if (isCur) {
+        const label = `${DAYS_LONG[new Date(year,month,day).getDay()]}, ${MONTHS[month]} ${day}, ${year}` +
+          (evts && evts.length ? ': ' + evts.map(e => e.label).join(', ') : '');
+        cell.setAttribute('role', 'gridcell');
+        cell.setAttribute('tabindex', '0');
+        cell.setAttribute('aria-label', label);
+        cell.addEventListener('click', () => openDayModal(year, month, day, evts || []));
+        cell.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDayModal(year, month, day, evts || []); }
+        });
+      } else {
+        cell.setAttribute('role', 'gridcell');
+        cell.setAttribute('aria-hidden', 'true');
+      }
+      return cell;
+    }
+
+    // Previous-month padding
+    for (let i = 0; i < firstDow; i++) {
+      grid.appendChild(makeCell(null, daysInPrev - firstDow + 1 + i, false, []));
+    }
+    // Current month
+    for (let d = 1; d <= daysInMonth; d++) {
+      grid.appendChild(makeCell(d, d, true, getEventsForDate(year, month, d)));
+    }
+    // Next-month padding
+    const total = firstDow + daysInMonth;
+    const trailing = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let i = 1; i <= trailing; i++) grid.appendChild(makeCell(null, i, false, []));
+
+    // Update controls
+    document.getElementById('calTitle').textContent = `${MONTHS[month]} ${year}`;
+    document.getElementById('monthSel').value = month;
+    document.getElementById('yearSel').value = year;
+  }
+
+  // ════ NAVIGATION ════
+  function navigate(delta) {
+    viewMonth += delta;
+    if (viewMonth > 11) { viewMonth = 0;  viewYear++; }
+    if (viewMonth < 0)  { viewMonth = 11; viewYear--; }
+    if (viewYear < CUR_YEAR) { viewYear = CUR_YEAR; viewMonth = 0; }
+    if (viewYear > END_YEAR) { viewYear = END_YEAR; viewMonth = 11; }
+    renderCalendar(viewYear, viewMonth);
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
+  document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
+  document.getElementById('todayBtn').addEventListener('click', () => {
+    viewYear = TODAY.getFullYear(); viewMonth = TODAY.getMonth();
+    renderCalendar(viewYear, viewMonth);
+  });
+  document.getElementById('goBtn').addEventListener('click', () => {
+    const m = parseInt(document.getElementById('monthSel').value);
+    const y = parseInt(document.getElementById('yearSel').value);
+    viewYear = y; viewMonth = m;
+    renderCalendar(viewYear, viewMonth);
+  });
+  document.getElementById('monthSel').addEventListener('change', () => {
+    viewMonth = parseInt(document.getElementById('monthSel').value);
+    renderCalendar(viewYear, viewMonth);
+  });
+  document.getElementById('yearSel').addEventListener('change', () => {
+    viewYear = parseInt(document.getElementById('yearSel').value);
+    renderCalendar(viewYear, viewMonth);
+  });
+  document.getElementById('pdfBtn').addEventListener('click', () => {
+    const prev = document.title;
+    document.title = `${MONTHS[viewMonth]} ${viewYear} – Living Word Christian Church Calendar`;
+    window.print();
+    document.title = prev;
+  });
+
+  // ════ DAY MODAL ════
+  const dayOverlay = document.getElementById('dayOverlay');
+  const dayClose   = document.getElementById('dayClose');
+
+  function openDayModal(year, month, day, evts) {
+    const dow = new Date(year, month, day).getDay();
+    document.getElementById('dayTitle').textContent =
+      `${DAYS_LONG[dow]}, ${MONTHS[month]} ${day}, ${year}`;
+
+    const body = document.getElementById('dayBody');
+    body.innerHTML = '';
+    if (!evts.length) {
+      const p = document.createElement('p');
+      p.className = 'day-no-events';
+      p.textContent = 'No events scheduled for this day.';
+      body.appendChild(p);
+    } else {
+      evts.forEach(e => {
+        const row = document.createElement('div');
+        row.className = 'day-event-item';
+        row.innerHTML = `<div class="day-event-dot" style="background:${e.color}"></div>
+          <div><div class="day-event-name">${e.label}</div><div class="day-event-time">${e.time}</div></div>`;
+        body.appendChild(row);
+      });
+    }
+
+    dayOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    dayClose.focus();
+  }
+
+  function closeDayModal() {
+    dayOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  dayClose.addEventListener('click', closeDayModal);
+  dayOverlay.addEventListener('click', e => { if (e.target === dayOverlay) closeDayModal(); });
+
+  // ════ ANNOUNCEMENT MODAL ════
+  const annmtOverlay = document.getElementById('annmtOverlay');
+  const annmtClose   = document.getElementById('annmtClose');
+
+  const META_ICONS = {
+    calendar: 'M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z',
+    clock:    'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z',
+    people:   'M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z',
+    person:   'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z',
+    location: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+  };
+
+  function openAnnmt(idx) {
+    const a = ANNOUNCEMENTS[idx];
+    document.getElementById('annmtTag').textContent   = a.tag;
+    document.getElementById('annmtTitle').textContent = a.title;
+    document.getElementById('annmtHead').style.background = a.color;
+
+    const body = document.getElementById('annmtBody');
+    const metaHTML = a.meta.map(m =>
+      `<div class="annmt-meta-row">
+        <svg viewBox="0 0 24 24" width="15" height="15" style="fill:#2D6A4F;flex-shrink:0;margin-top:2px"><path d="${META_ICONS[m.icon]}"/></svg>
+        <div><span class="annmt-meta-key">${m.key}:</span> <span class="annmt-meta-val">${m.val}</span></div>
+      </div>`
+    ).join('');
+    body.innerHTML = `<div class="annmt-meta">${metaHTML}</div><p class="annmt-desc">${a.body}</p>`;
+
+    annmtOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    annmtClose.focus();
+  }
+
+  function closeAnnmt() {
+    annmtOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  annmtClose.addEventListener('click', closeAnnmt);
+  annmtOverlay.addEventListener('click', e => { if (e.target === annmtOverlay) closeAnnmt(); });
+
+  document.querySelectorAll('.postcard').forEach(card => {
+    card.addEventListener('click', () => openAnnmt(parseInt(card.dataset.annmt)));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openAnnmt(parseInt(card.dataset.annmt)); }
+    });
+  });
+
+  // ════ GLOBAL ESCAPE KEY ════
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (dayOverlay.classList.contains('open'))   closeDayModal();
+      if (annmtOverlay.classList.contains('open')) closeAnnmt();
+      if (aboutModal.classList.contains('open'))   closeModal();
+    }
+  });
+
+  // ════ NAV TOGGLE ════
+  const toggle = document.getElementById('navToggle');
+  const menu   = document.getElementById('nav-menu');
+  toggle.addEventListener('click', () => {
+    const isOpen = menu.classList.toggle('open');
+    toggle.classList.toggle('open', isOpen);
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menu.classList.remove('open'); toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.remove('open'); toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // ════ DROPDOWNS ════
+  const isMobile = () => window.innerWidth <= 700;
+  const allDropdowns = [];
+  function makeDropdown(cId, tId, mId) {
+    const container = document.getElementById(cId);
+    const btn       = document.getElementById(tId);
+    const menuEl    = document.getElementById(mId);
+    let timer = null;
+    function open()  { allDropdowns.forEach(d => { if (d.container !== container) d.close(); }); container.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    function close() { container.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+    function scheduleClose() { timer = setTimeout(close, 180); }
+    function cancelClose()   { clearTimeout(timer); }
+    btn.addEventListener('click', e => { e.stopPropagation(); container.classList.contains('open') ? close() : open(); });
+    container.addEventListener('mouseenter', () => { if (!isMobile()) { cancelClose(); open(); } });
+    container.addEventListener('mouseleave', () => { if (!isMobile()) scheduleClose(); });
+    menuEl.addEventListener('mouseenter', () => { if (!isMobile()) cancelClose(); });
+    menuEl.addEventListener('mouseleave', () => { if (!isMobile()) scheduleClose(); });
+    menuEl.querySelectorAll('a').forEach(l => l.addEventListener('click', close));
+    btn.addEventListener('keydown', e => { if (e.key==='ArrowDown'||e.key==='Enter'||e.key===' ') { e.preventDefault(); open(); menuEl.querySelector('a')?.focus(); } });
+    menuEl.addEventListener('keydown', e => {
+      const items=[...menuEl.querySelectorAll('a')]; const idx=items.indexOf(document.activeElement);
+      if (e.key==='ArrowDown'){e.preventDefault();items[(idx+1)%items.length]?.focus();}
+      if (e.key==='ArrowUp'){e.preventDefault();items[(idx-1+items.length)%items.length]?.focus();}
+    });
+    const api = { container, btn, close };
+    allDropdowns.push(api);
+    return api;
+  }
+  makeDropdown('aboutDropdown','aboutToggle','about-menu');
+  makeDropdown('ministriesDropdown','ministriesToggle','ministries-menu');
+  makeDropdown('resourcesDropdown','resourcesToggle','resources-menu');
+  document.addEventListener('click', () => allDropdowns.forEach(d => d.close()));
+
+  // ════ ABOUT MODAL ════
+  const aboutModal  = document.getElementById('aboutModal');
+  const modalClose  = document.getElementById('modalClose');
+  const footerAbout = document.getElementById('footerAboutLink');
+  function openModal()  { aboutModal.classList.add('open'); document.body.style.overflow='hidden'; modalClose.focus(); }
+  function closeModal() { aboutModal.classList.remove('open'); document.body.style.overflow=''; footerAbout.focus(); }
+  footerAbout.addEventListener('click', e => { e.preventDefault(); openModal(); });
+  modalClose.addEventListener('click', closeModal);
+  aboutModal.addEventListener('click', e => { if (e.target===aboutModal) closeModal(); });
+
+  // ════ INIT ════
+  populateSelects();
+  renderCalendar(viewYear, viewMonth);
+  </script>
+</body>
+</html>

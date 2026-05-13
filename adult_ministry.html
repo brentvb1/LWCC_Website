@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adult Ministry – Living Word Christian Church</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #FFF8F0;
+      --coral:       #FF6B6B;
+      --coral-dark:  #E85555;
+      --green:       #2D6A4F;
+      --green-light: #40916C;
+      --green-dark:  #1B4332;
+      --text:        #2C2C2C;
+      --muted:       #6B6B6B;
+      --white:       #FFFFFF;
+      --border:      rgba(0,0,0,.09);
+      --shadow:      0 4px 24px rgba(0,0,0,.10);
+      --radius:      14px;
+      --nav-h:       70px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: transparent;
+      background-image: url('logo.jpg');
+      background-size: 100% auto;
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ════ NAV ════ */
+    nav {
+      position: sticky; top: 0; z-index: 300;
+      height: var(--nav-h);
+      background: var(--green-dark);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1rem, 4vw, 3rem);
+      box-shadow: 0 2px 16px rgba(0,0,0,.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .7rem; text-decoration: none; transition: opacity .2s; }
+    .nav-logo:hover { opacity: .82; }
+    .nav-logo-icon { height: 54px; width: auto; flex-shrink: 0; background: #fff; padding: 3px 6px; border-radius: 4px; }
+    .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--white); line-height: 1.2; }
+    .nav-logo-text span { color: var(--coral); }
+    .nav-links { display: flex; align-items: center; gap: clamp(.8rem, 2vw, 2rem); list-style: none; }
+    .nav-links a { color: rgba(255,255,255,.85); text-decoration: none; font-size: .88rem; font-weight: 500; letter-spacing: .02em; transition: color .2s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--coral); }
+    .nav-links .nav-donate a { background: transparent; border: 2px solid rgba(255,255,255,.55); color: var(--white); padding: .45rem 1.1rem; border-radius: 100px; font-weight: 600; transition: background .2s, border-color .2s, transform .15s; }
+    .nav-links .nav-donate a:hover { background: rgba(255,255,255,.12); border-color: var(--white); transform: translateY(-1px); color: var(--white); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-trigger { display: inline-flex; align-items: center; gap: .3rem; background: none; border: none; color: rgba(255,255,255,.85); font-family: 'Inter', sans-serif; font-size: .88rem; font-weight: 500; cursor: pointer; padding: 0; white-space: nowrap; transition: color .2s; }
+    .nav-dropdown-trigger:hover { color: var(--coral); }
+    .nav-dropdown-trigger svg { width: 14px; height: 14px; fill: currentColor; transition: transform .25s; flex-shrink: 0; }
+    .nav-dropdown.open .nav-dropdown-trigger { color: var(--coral); }
+    .nav-dropdown.open .nav-dropdown-trigger svg { transform: rotate(180deg); }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%) translateY(-6px); background: var(--white); border-radius: 10px; min-width: 180px; box-shadow: 0 8px 32px rgba(0,0,0,.18); list-style: none; padding: .4rem 0; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 200; }
+    .nav-dropdown-menu::before { content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 6px solid var(--white); }
+    .nav-dropdown.open .nav-dropdown-menu { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+    .nav-dropdown-menu li a { display: flex; align-items: center; gap: .6rem; padding: .65rem 1.1rem; color: var(--green-dark); font-size: .88rem; font-weight: 500; text-decoration: none; border-radius: 6px; margin: .1rem .3rem; transition: background .15s, color .15s; white-space: nowrap; }
+    .nav-dropdown-menu li a svg { width: 15px; height: 15px; fill: var(--green); flex-shrink: 0; }
+    .nav-dropdown-menu li a:hover { background: rgba(45,106,79,.1); color: var(--green); }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .nav-toggle span { display: block; width: 26px; height: 2px; background: var(--white); border-radius: 2px; transition: transform .3s, opacity .3s; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ════ MAIN CONTENT ════ */
+    .adult-wrap {
+      max-width: 860px;
+      margin: 50vw auto 0;
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 5vw, 3rem) clamp(3rem, 7vw, 5rem);
+    }
+
+    /* ════ HERO CARD ════ */
+    .adult-card {
+      background: rgba(255,255,255,0.88);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .adult-card-header {
+      background: var(--green-dark);
+      padding: 2rem clamp(1.5rem, 5vw, 2.5rem) 1.8rem;
+      text-align: center;
+    }
+
+    .adult-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      color: rgba(255,255,255,.9);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .3rem .9rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .adult-eyebrow svg { width: 13px; height: 13px; fill: currentColor; }
+
+    .adult-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.1rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: .6rem;
+    }
+
+    .adult-tagline {
+      font-size: clamp(.95rem, 2vw, 1.1rem);
+      font-weight: 300;
+      color: rgba(255,255,255,.8);
+      font-style: italic;
+    }
+
+    .adult-card-body {
+      padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
+    }
+
+    /* ════ INFO ROW ════ */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-pill {
+      background: rgba(45,106,79,.07);
+      border: 1px solid rgba(45,106,79,.18);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+    }
+
+    .info-pill-icon {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: rgba(45,106,79,.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .info-pill-icon svg { width: 18px; height: 18px; fill: var(--green); }
+
+    .info-pill-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--muted);
+      margin-bottom: .2rem;
+    }
+
+    .info-pill-value {
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      line-height: 1.4;
+    }
+
+    .info-pill-sub {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: .15rem;
+    }
+
+    /* ════ DESCRIPTION ════ */
+    .adult-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 1.8rem;
+    }
+
+    .adult-body-text {
+      font-size: clamp(.92rem, 2vw, 1rem);
+      color: var(--text);
+      line-height: 1.85;
+    }
+
+    /* ════ PHOTO GRID ════ */
+    .photo-grid-wrap {
+      margin-bottom: 1.5rem;
+    }
+
+    .photo-grid {
+      columns: 3;
+      column-gap: .5rem;
+    }
+
+    .photo-item {
+      break-inside: avoid;
+      margin-bottom: .5rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .photo-item img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform .35s ease, filter .35s ease;
+    }
+
+    .photo-item:hover img {
+      transform: scale(1.06);
+      filter: brightness(.85);
+    }
+
+    .photo-item-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .25s;
+      background: rgba(27,67,50,.35);
+    }
+
+    .photo-item:hover .photo-item-overlay { opacity: 1; }
+
+    .photo-item-overlay svg {
+      width: 36px; height: 36px;
+      fill: var(--white);
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
+    }
+
+    /* ════ LIGHTBOX ════ */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.92);
+      z-index: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+
+    .lightbox.open { opacity: 1; pointer-events: auto; }
+
+    .lightbox-img-wrap {
+      position: relative;
+      max-width: min(90vw, 900px);
+      max-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.6);
+      display: block;
+      transition: opacity .2s;
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      bottom: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .8rem;
+      color: rgba(255,255,255,.55);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .lightbox-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,.12);
+      border: none;
+      border-radius: 50%;
+      width: 52px; height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s;
+      backdrop-filter: blur(6px);
+    }
+
+    .lightbox-btn:hover { background: rgba(255,255,255,.25); }
+    .lightbox-btn svg { width: 24px; height: 24px; fill: var(--white); }
+    .lightbox-prev { left: clamp(.75rem, 2vw, 2rem); }
+    .lightbox-next { right: clamp(.75rem, 2vw, 2rem); }
+
+    .lightbox-close {
+      position: fixed;
+      top: 1rem; right: 1rem;
+      background: rgba(255,255,255,.12);
+      border: none;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s;
+      backdrop-filter: blur(6px);
+    }
+
+    .lightbox-close:hover { background: rgba(255,255,255,.25); }
+    .lightbox-close svg { width: 20px; height: 20px; fill: var(--white); }
+
+    @media (max-width: 600px) {
+      .photo-grid { columns: 2; }
+      .lightbox-btn { width: 40px; height: 40px; }
+      .lightbox-btn svg { width: 20px; height: 20px; }
+    }
+
+    /* ════ SCRIPTURE ════ */
+    .scripture-card {
+      background: rgba(255,255,255,0.88);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
+      text-align: center;
+    }
+
+    .scripture-icon {
+      width: 44px; height: 44px;
+      background: rgba(45,106,79,.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem;
+    }
+
+    .scripture-icon svg { width: 22px; height: 22px; fill: var(--green); }
+
+    .scripture-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      font-style: italic;
+      color: var(--green-dark);
+      line-height: 1.7;
+      max-width: 640px;
+      margin: 0 auto .8rem;
+    }
+
+    .scripture-cite {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-style: normal;
+    }
+
+    /* ════ MODAL ════ */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal { background: var(--white); border-radius: var(--radius); width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.3); overflow: hidden; transform: translateY(16px) scale(.97); transition: transform .25s; }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-header { background: var(--green-dark); padding: 1.4rem 1.6rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .modal-header-text h3 { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.25rem; font-weight: 700; margin-bottom: .2rem; }
+    .modal-header-text p { color: rgba(255,255,255,.65); font-size: .82rem; }
+    .modal-close { background: rgba(255,255,255,.15); border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background .2s; }
+    .modal-close:hover { background: rgba(255,255,255,.28); }
+    .modal-close svg { width: 16px; height: 16px; fill: var(--white); }
+    .modal-body { padding: 1.4rem 1.6rem 1.8rem; }
+    .modal-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.1rem; border-radius: 10px; text-decoration: none; transition: background .15s, transform .15s; margin-bottom: .6rem; }
+    .modal-option:last-child { margin-bottom: 0; }
+    .modal-option:hover { background: rgba(45,106,79,.08); transform: translateX(4px); }
+    .modal-option-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .modal-option-icon.green { background: rgba(45,106,79,.12); }
+    .modal-option-icon.coral { background: rgba(255,107,107,.12); }
+    .modal-option-icon svg { width: 22px; height: 22px; }
+    .modal-option-icon.green svg { fill: var(--green); }
+    .modal-option-icon.coral svg { fill: var(--coral); }
+    .modal-option-text strong { display: block; font-size: .97rem; font-weight: 600; color: var(--green-dark); margin-bottom: .15rem; }
+    .modal-option-text span { font-size: .8rem; color: var(--muted); }
+    .modal-option-arrow { margin-left: auto; width: 18px; height: 18px; fill: var(--muted); flex-shrink: 0; transition: fill .15s; }
+    .modal-option:hover .modal-option-arrow { fill: var(--green); }
+
+    /* ════ FOOTER ════ */
+    footer { background: #111; color: rgba(255,255,255,.65); padding: clamp(2rem,5vw,3.5rem) clamp(1rem,5vw,3rem); font-size: .85rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
+    .footer-brand h3 { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.1rem; margin-bottom: .5rem; }
+    .footer-brand p { line-height: 1.7; max-width: 260px; }
+    .footer-col h4 { color: var(--white); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .9rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
+    .footer-col ul a { color: rgba(255,255,255,.6); text-decoration: none; transition: color .2s; }
+    .footer-col ul a:hover { color: var(--coral); }
+    .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+    .footer-social { display: flex; gap: .7rem; }
+    .footer-social a { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center; transition: background .2s; text-decoration: none; }
+    .footer-social a:hover { background: rgba(255,255,255,.2); }
+    .footer-social svg { width: 15px; height: 15px; fill: rgba(255,255,255,.7); }
+    .footer-social a:hover svg { fill: #fff; }
+
+    /* ════ RESPONSIVE ════ */
+    @media (max-width: 600px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      nav { padding: 0 1.2rem; }
+      .nav-links { display: none; position: absolute; top: var(--nav-h); left: 0; right: 0; background: var(--green-dark); flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem 1.5rem; gap: .1rem; border-top: 1px solid rgba(255,255,255,.08); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a { display: block; padding: .7rem 0; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+      .nav-links li:last-child a { border-bottom: none; }
+      .nav-links .nav-donate a { display: inline-flex; margin-top: .5rem; border-bottom: none; }
+      .nav-toggle { display: flex; }
+      .nav-dropdown-trigger { display: flex; padding: .7rem 0; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,.06); width: 100%; justify-content: space-between; }
+      .nav-dropdown-menu { position: static; transform: none; box-shadow: none; background: rgba(255,255,255,.06); border-radius: 8px; margin: .3rem 0 .4rem; padding: .2rem 0; opacity: 1; pointer-events: none; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+      .nav-dropdown-menu::before { display: none; }
+      .nav-dropdown.open .nav-dropdown-menu { max-height: 300px; pointer-events: auto; transform: none; }
+      .nav-dropdown-menu li a { color: rgba(255,255,255,.8); margin: 0; border-radius: 0; padding: .6rem 1rem; font-size: .95rem; border-bottom: none; }
+      .nav-dropdown-menu li a svg { fill: rgba(255,255,255,.6); }
+      .nav-dropdown-menu li a:hover { background: rgba(255,255,255,.08); color: var(--coral); }
+    }
+
+    @media (max-width: 480px) {
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; border-radius: 4px; }
+
+    /* ════ HERO PAGE LABEL ════ */
+    body { position: relative; }
+    .page-hero-label { position: absolute; top: calc(var(--nav-h) + 4vw); left: 0; right: 0; text-align: center; pointer-events: none; z-index: 1; }
+    .page-hero-label h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.6); letter-spacing: .04em; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav aria-label="Main navigation">
+    <a href="index.html" class="nav-logo" aria-label="Living Word Christian Church home">
+      <img src="logo.jpg" class="nav-logo-icon" alt="LWCC">
+      <span class="nav-logo-text">LWCC</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu" id="navToggle">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-menu" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li class="nav-dropdown" id="aboutDropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="about-menu" id="aboutToggle">About Us<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <ul class="nav-dropdown-menu" id="about-menu" role="menu">
+          <li role="none"><a href="our_pastors.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Our Pastors</a></li>
+          <li role="none"><a href="our_beliefs.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>Our Beliefs</a></li>
+        </ul>
+      </li>
+      <li class="nav-dropdown" id="ministriesDropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="ministries-menu" id="ministriesToggle">Ministries<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <ul class="nav-dropdown-menu" id="ministries-menu" role="menu">
+          <li role="none"><a href="childrens_ministry.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>Children's Ministry</a></li>
+          <li role="none"><a href="youth_group.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Youth Group</a></li>
+          <li role="none"><a href="adult_ministry.html" role="menuitem" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Adult Ministry</a></li>
+          <li role="none"><a href="fellowship.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>Fellowships</a></li>
+        </ul>
+      </li>
+      <li class="nav-dropdown" id="resourcesDropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="resources-menu" id="resourcesToggle">Resources<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <ul class="nav-dropdown-menu" id="resources-menu" role="menu">
+          <li role="none"><a href="audio_archive.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>Audio Archive</a></li>
+          <li role="none"><a href="bible.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>Online Bible</a></li>
+          <li role="none"><a href="sermons.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V6h10v2z"/></svg>Sermons</a></li>
+          <li role="none"><a href="events_calendar.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>Events Calendar</a></li>
+          <li role="none"><a href="prayer_request.html" role="menuitem"><svg viewBox="0 0 24 24"><path d="M14.5 2.5c0 1.5-1.5 7-1.5 7h-2C10.5 9.5 9 4 9 2.5a2.5 2.5 0 015 0zM12 17c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-2c1.4 0 4 .7 4 2v1H8v-1c0-1.3 2.6-2 4-2z"/></svg>Prayer Request</a></li>
+        </ul>
+      </li>
+      <li class="nav-donate"><a href="donate.html">Donations</a></li>
+      <li><a href="find_us.html">Find Us</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-hero-label" aria-hidden="true"><h2>Adult Ministry</h2></div>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main class="adult-wrap" aria-label="Adult Ministry">
+
+    <!-- Main card -->
+    <div class="adult-card">
+
+      <div class="adult-card-header">
+        <div class="adult-eyebrow">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          Couples &amp; Adults
+        </div>
+        <h1 class="adult-title">Adult Ministry</h1>
+        <p class="adult-tagline">Where adults can enjoy, share, and inspire!</p>
+      </div>
+
+      <div class="adult-card-body">
+
+        <div class="info-grid">
+          <!-- Leaders -->
+          <div class="info-pill">
+            <div class="info-pill-icon">
+              <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+            <div>
+              <div class="info-pill-label">Leaders</div>
+              <div class="info-pill-value">Don &amp; Dana</div>
+            </div>
+          </div>
+
+          <!-- Schedule -->
+          <div class="info-pill">
+            <div class="info-pill-icon">
+              <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+            </div>
+            <div>
+              <div class="info-pill-label">Schedule</div>
+              <div class="info-pill-value">Every 3rd Thursday</div>
+              <div class="info-pill-sub">6:00 P.M. – 7:00 P.M.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="adult-divider"></div>
+
+        <p class="adult-body-text">Every couple has challenges and trials, but God has a way for us to live in peace and harmony by the leading of the Holy Spirit. Come join us as we grow together and deepen our relationship with God and each other.</p>
+
+      </div>
+    </div>
+
+    <!-- Photo grid -->
+    <div class="photo-grid-wrap">
+      <div class="photo-grid" id="photoGrid">
+
+        <div class="photo-item" data-index="0" role="button" tabindex="0" aria-label="Adult Ministry photo 1">
+          <img src="https://picsum.photos/seed/lwcc-adult-1/600/800" alt="Adult Ministry photo 1" loading="lazy" />
+          <div class="photo-item-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </div>
+        </div>
+
+        <div class="photo-item" data-index="1" role="button" tabindex="0" aria-label="Adult Ministry photo 2">
+          <img src="https://picsum.photos/seed/lwcc-adult-2/600/400" alt="Adult Ministry photo 2" loading="lazy" />
+          <div class="photo-item-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </div>
+        </div>
+
+        <div class="photo-item" data-index="2" role="button" tabindex="0" aria-label="Adult Ministry photo 3">
+          <img src="https://picsum.photos/seed/lwcc-adult-3/600/600" alt="Adult Ministry photo 3" loading="lazy" />
+          <div class="photo-item-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </div>
+        </div>
+
+        <div class="photo-item" data-index="3" role="button" tabindex="0" aria-label="Adult Ministry photo 4">
+          <img src="https://picsum.photos/seed/lwcc-adult-4/600/400" alt="Adult Ministry photo 4" loading="lazy" />
+          <div class="photo-item-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </div>
+        </div>
+
+        <div class="photo-item" data-index="4" role="button" tabindex="0" aria-label="Adult Ministry photo 5">
+          <img src="https://picsum.photos/seed/lwcc-adult-5/600/800" alt="Adult Ministry photo 5" loading="lazy" />
+          <div class="photo-item-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </div>
+        </div>
+
+        <div class="photo-item" data-index="5" role="button" tabindex="0" aria-label="Adult Ministry photo 6">
+          <img src="https://picsum.photos/seed/lwcc-adult-6/600/600" alt="Adult Ministry photo 6" loading="lazy" />
+          <div class="photo-item-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo slideshow">
+      <button class="lightbox-close" id="lbClose" aria-label="Close slideshow">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+      <button class="lightbox-btn lightbox-prev" id="lbPrev" aria-label="Previous photo">
+        <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+      </button>
+      <div class="lightbox-img-wrap">
+        <img class="lightbox-img" id="lbImg" src="" alt="" />
+        <span class="lightbox-counter" id="lbCounter"></span>
+      </div>
+      <button class="lightbox-btn lightbox-next" id="lbNext" aria-label="Next photo">
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </button>
+    </div>
+
+    <!-- Scripture card -->
+    <div class="scripture-card">
+      <div class="scripture-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+      </div>
+      <p class="scripture-quote">"So now I am giving you a new commandment: Love each other. Just as I have loved you, you should love each other."</p>
+      <cite class="scripture-cite">John 13:34</cite>
+    </div>
+
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>Living Word Christian Church</h3>
+        <p>A community rooted in Scripture, alive in worship, and sent to serve. Everyone welcome.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul role="list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#" id="footerAboutLink">About Us</a></li>
+          <li><a href="ministries.html">Ministries</a></li>
+          <li><a href="bible.html">Online Bible</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul role="list">
+          <li><a href="donate.html">Donations</a></li>
+          <li><a href="prayer_request.html">Prayer Requests</a></li>
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Us</h4>
+        <ul role="list">
+          <li><a href="#">950 West 725 South</a></li>
+          <li><a href="#">Vernal, Utah 84078</a></li>
+          <li><a href="https://www.google.com/maps?q=40.444944,-109.547417" target="_blank" rel="noopener noreferrer">&#x1F4CD; View on Map</a></li>
+          <li><a href="#">Sunday Service: 10:00 am</a></li>
+          <li><a href="#">Thursday: 6:00 pm</a></li>
+          <li><a href="tel:4357732255">(435) 773-2255</a></li>
+          <li><a href="mailto:LWCCutah@gmail.com">LWCCutah@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Living Word Christian Church. All rights reserved.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path fill="#111" d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="#111" stroke-width="2" stroke-linecap="round"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon fill="#111" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ ABOUT US MODAL ═══ -->
+  <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-label="About Us">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-header-text"><h3>About Us</h3><p>Learn more about our church family</p></div>
+        <button class="modal-close" id="modalClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+      </div>
+      <div class="modal-body">
+        <a href="our_pastors.html" class="modal-option">
+          <div class="modal-option-icon green"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+          <div class="modal-option-text"><strong>Our Pastors</strong><span>Meet the leadership team guiding our congregation</span></div>
+          <svg class="modal-option-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </a>
+        <a href="our_beliefs.html" class="modal-option">
+          <div class="modal-option-icon coral"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+          <div class="modal-option-text"><strong>Our Beliefs</strong><span>Discover the core doctrines that anchor our faith</span></div>
+          <svg class="modal-option-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  const toggle = document.getElementById('navToggle');
+  const menu   = document.getElementById('nav-menu');
+  toggle.addEventListener('click', () => {
+    const isOpen = menu.classList.toggle('open');
+    toggle.classList.toggle('open', isOpen);
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menu.classList.remove('open'); toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.remove('open'); toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  const isMobile = () => window.innerWidth <= 700;
+  const allDropdowns = [];
+  function makeDropdown(cId, tId, mId) {
+    const container = document.getElementById(cId);
+    const btn = document.getElementById(tId);
+    const menuEl = document.getElementById(mId);
+    let timer = null;
+    function open() { allDropdowns.forEach(d => { if (d.container !== container) d.close(); }); container.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    function close() { container.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+    function scheduleClose() { timer = setTimeout(close, 180); }
+    function cancelClose() { clearTimeout(timer); }
+    btn.addEventListener('click', e => { e.stopPropagation(); container.classList.contains('open') ? close() : open(); });
+    container.addEventListener('mouseenter', () => { if (!isMobile()) { cancelClose(); open(); } });
+    container.addEventListener('mouseleave', () => { if (!isMobile()) scheduleClose(); });
+    menuEl.addEventListener('mouseenter', () => { if (!isMobile()) cancelClose(); });
+    menuEl.addEventListener('mouseleave', () => { if (!isMobile()) scheduleClose(); });
+    menuEl.querySelectorAll('a').forEach(l => l.addEventListener('click', close));
+    btn.addEventListener('keydown', e => { if (e.key==='ArrowDown'||e.key==='Enter'||e.key===' ') { e.preventDefault(); open(); menuEl.querySelector('a')?.focus(); } });
+    menuEl.addEventListener('keydown', e => {
+      const items=[...menuEl.querySelectorAll('a')]; const idx=items.indexOf(document.activeElement);
+      if (e.key==='ArrowDown'){e.preventDefault();items[(idx+1)%items.length]?.focus();}
+      if (e.key==='ArrowUp'){e.preventDefault();items[(idx-1+items.length)%items.length]?.focus();}
+    });
+    const api = { container, btn, close };
+    allDropdowns.push(api);
+    return api;
+  }
+  makeDropdown('aboutDropdown','aboutToggle','about-menu');
+  makeDropdown('ministriesDropdown','ministriesToggle','ministries-menu');
+  makeDropdown('resourcesDropdown','resourcesToggle','resources-menu');
+  document.addEventListener('click', () => allDropdowns.forEach(d => d.close()));
+  document.addEventListener('keydown', e => { if (e.key==='Escape') allDropdowns.forEach(d => { d.close(); d.btn.focus(); }); });
+
+  // ════ LIGHTBOX ════
+  const photos = [
+    { src: 'https://picsum.photos/seed/lwcc-adult-1/1200/900', alt: 'Adult Ministry photo 1' },
+    { src: 'https://picsum.photos/seed/lwcc-adult-2/1200/800', alt: 'Adult Ministry photo 2' },
+    { src: 'https://picsum.photos/seed/lwcc-adult-3/1200/900', alt: 'Adult Ministry photo 3' },
+    { src: 'https://picsum.photos/seed/lwcc-adult-4/1200/800', alt: 'Adult Ministry photo 4' },
+    { src: 'https://picsum.photos/seed/lwcc-adult-5/1200/900', alt: 'Adult Ministry photo 5' },
+    { src: 'https://picsum.photos/seed/lwcc-adult-6/1200/900', alt: 'Adult Ministry photo 6' },
+  ];
+
+  const lightbox  = document.getElementById('lightbox');
+  const lbImg     = document.getElementById('lbImg');
+  const lbCounter = document.getElementById('lbCounter');
+  const lbClose   = document.getElementById('lbClose');
+  const lbPrev    = document.getElementById('lbPrev');
+  const lbNext    = document.getElementById('lbNext');
+  let current = 0;
+
+  function showPhoto(idx) {
+    current = (idx + photos.length) % photos.length;
+    lbCounter.textContent = `${current + 1} / ${photos.length}`;
+    lbImg.style.opacity = '0';
+    const preload = new Image();
+    preload.onload = () => {
+      lbImg.src = photos[current].src;
+      lbImg.alt = photos[current].alt;
+      lbImg.style.opacity = '1';
+    };
+    preload.src = photos[current].src;
+  }
+
+  function openLightbox(idx) {
+    showPhoto(idx);
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lbClose.focus();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.photo-item').forEach(item => {
+    item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));
+    item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(parseInt(item.dataset.index)); } });
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', () => showPhoto(current - 1));
+  lbNext.addEventListener('click', () => showPhoto(current + 1));
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  showPhoto(current - 1);
+    if (e.key === 'ArrowRight') showPhoto(current + 1);
+  });
+
+  const aboutModal  = document.getElementById('aboutModal');
+  const modalClose  = document.getElementById('modalClose');
+  const footerAbout = document.getElementById('footerAboutLink');
+  function openModal()  { aboutModal.classList.add('open'); document.body.style.overflow='hidden'; modalClose.focus(); }
+  function closeModal() { aboutModal.classList.remove('open'); document.body.style.overflow=''; footerAbout.focus(); }
+  footerAbout.addEventListener('click', e => { e.preventDefault(); openModal(); });
+  modalClose.addEventListener('click', closeModal);
+  aboutModal.addEventListener('click', e => { if (e.target===aboutModal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key==='Escape' && aboutModal.classList.contains('open')) closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# OS & editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# VS Code
+.vscode/
+
+# Claude Code local settings
+.claude/
+
+# Logs & temp files
+*.log
+*.tmp
+*.bak
+
+# Secrets / env
+.env
+.env.*
+
+# Node (if ever added)
+node_modules/
