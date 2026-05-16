@@ -132,8 +132,14 @@
     .fb-card-body {
       padding: 0;
       display: flex; justify-content: center;
-      max-height: 620px;
-      overflow-y: auto;
+      height: 620px;
+      overflow-y: scroll;
+    }
+    .fb-card-body--reels {
+      height: 700px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      display: block;
     }
 
     /* ════ SCRIPTURE CARD ════ */
@@ -312,12 +318,12 @@
         <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
         <span>Reels — Living Word Christian Church</span>
       </div>
-      <div class="fb-card-body">
+      <div class="fb-card-body fb-card-body--reels">
         <div class="fb-page"
           data-href="https://www.facebook.com/LWCCVernaUtah/"
           data-tabs="videos"
           data-width="500"
-          data-height="1200"
+          data-height="1500"
           data-small-header="false"
           data-adapt-container-width="true"
           data-hide-cover="true"
