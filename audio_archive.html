@@ -409,10 +409,8 @@
 
   function tick() {
     if (!isHovering) return;
+    if (fbBody.scrollTop >= fbBody.scrollHeight - fbBody.clientHeight) return;
     fbBody.scrollTop += 0.8;
-    if (fbBody.scrollTop >= fbBody.scrollHeight - fbBody.clientHeight) {
-      fbBody.scrollTop = 0;
-    }
     rafId = requestAnimationFrame(tick);
   }
 
