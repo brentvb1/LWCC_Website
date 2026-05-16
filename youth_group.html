@@ -112,6 +112,38 @@
       box-shadow: var(--shadow);
     }
 
+    /* ════ ANNOUNCEMENT BANNER ════ */
+    .announcement-banner {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.4rem 1.8rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .announcement-icon {
+      font-size: 2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .announcement-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .3rem;
+    }
+
+    .announcement-text p {
+      font-size: .93rem;
+      color: rgba(255,255,255,.9);
+      line-height: 1.6;
+    }
+
     /* ════ HERO CARD ════ */
     .youth-card {
       background: rgba(255,255,255,0.88);
@@ -536,6 +568,15 @@
 
   <!-- ═══ MAIN CONTENT ═══ -->
   <main class="youth-wrap" aria-label="Youth Group">
+
+    <!-- Summer announcement -->
+    <div class="announcement-banner" role="note">
+      <div class="announcement-icon" aria-hidden="true">&#9728;&#65039;</div>
+      <div class="announcement-text">
+        <h2>Youth Group Has Finished for the Summer!</h2>
+        <p>Thank you to everyone who joined us this season. We hope you have a wonderful, restful summer — we can't wait to see you again in the fall!</p>
+      </div>
+    </div>
 
     <!-- Main card -->
     <div class="youth-card">
