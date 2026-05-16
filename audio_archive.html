@@ -136,7 +136,9 @@
       height: 680px;
       overflow-y: scroll;
       overflow-x: hidden;
+      scrollbar-width: none;
     }
+    .fb-card-body::-webkit-scrollbar { display: none; }
 
     /* ════ SCRIPTURE CARD ════ */
     .scripture-card {
@@ -400,6 +402,29 @@
   </script>
 
   <script>
+  // ════ HOVER AUTO-SCROLL ════
+  const fbBody = document.querySelector('.fb-card-body');
+  let rafId = null;
+  let isHovering = false;
+
+  function tick() {
+    if (!isHovering) return;
+    fbBody.scrollTop += 0.8;
+    if (fbBody.scrollTop >= fbBody.scrollHeight - fbBody.clientHeight) {
+      fbBody.scrollTop = 0;
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  fbBody.addEventListener('mouseenter', () => {
+    isHovering = true;
+    rafId = requestAnimationFrame(tick);
+  });
+  fbBody.addEventListener('mouseleave', () => {
+    isHovering = false;
+    cancelAnimationFrame(rafId);
+  });
+
   // ════ PATCH FB IFRAMES FOR IN-PAGE VIDEO PLAYBACK ════
   // Facebook SDK injects iframes without media permissions; this observer adds them.
   const fbIframePatcher = new MutationObserver(() => {
