@@ -76,21 +76,16 @@
       padding: clamp(2rem,5vw,3.5rem) clamp(1rem,5vw,3rem) clamp(3rem,7vw,5rem);
     }
 
-    /* ════ UNDER CONSTRUCTION CARD ════ */
-    .uc-card {
-      background: rgba(255,255,255,.92);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .uc-card-head {
+    /* ════ SERMON LIBRARY ════ */
+    .sermon-header {
       background: var(--green-dark);
+      border-radius: var(--radius);
       padding: 2.5rem clamp(1.5rem,5vw,2.5rem) 2.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
     }
-
-    .uc-icon-ring {
+    .sermon-header-icon {
       width: 72px; height: 72px;
       background: rgba(255,255,255,.12);
       border: 2px solid rgba(255,255,255,.25);
@@ -98,67 +93,97 @@
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 1.4rem;
     }
-    .uc-icon-ring svg { width: 34px; height: 34px; fill: rgba(255,255,255,.9); }
-
-    .uc-eyebrow {
+    .sermon-header-icon svg { width: 34px; height: 34px; fill: rgba(255,255,255,.9); }
+    .sermon-eyebrow {
       display: inline-flex; align-items: center; gap: .45rem;
       background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
       color: rgba(255,255,255,.9); font-size: .72rem; font-weight: 700;
       letter-spacing: .14em; text-transform: uppercase;
       padding: .28rem .9rem; border-radius: 100px; margin-bottom: 1.1rem;
     }
-
-    .uc-title {
+    .sermon-header h1 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(2.2rem,5.5vw,3.4rem);
       font-weight: 700; color: var(--white); line-height: 1.2; margin-bottom: .5rem;
     }
-
-    .uc-subtitle {
+    .sermon-header p {
       font-size: clamp(1rem,2.2vw,1.2rem);
       font-weight: 300; color: rgba(255,255,255,.75); font-style: italic;
     }
 
-    .uc-card-body {
-      padding: clamp(2rem,5vw,3rem) clamp(1.5rem,5vw,2.5rem);
+    .sermon-card {
+      background: rgba(255,255,255,.93);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 1.2rem;
     }
+    .sermon-card-inner {
+      padding: 1.6rem clamp(1.2rem,4vw,2rem);
+    }
+    .sermon-date-pill {
+      display: inline-block;
+      background: rgba(45,106,79,.1);
+      color: var(--green);
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: .22rem .75rem; border-radius: 100px;
+      margin-bottom: .85rem;
+    }
+    .sermon-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.25rem,3vw,1.6rem);
+      font-weight: 700; color: var(--green-dark);
+      line-height: 1.3; margin-bottom: .5rem;
+    }
+    .sermon-meta {
+      display: flex; flex-wrap: wrap; gap: .4rem .9rem;
+      font-size: .82rem; color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+    .sermon-meta span { display: flex; align-items: center; gap: .3rem; }
+    .sermon-meta svg { width: 13px; height: 13px; fill: var(--green); flex-shrink: 0; }
 
-    .uc-dots {
-      display: flex; justify-content: center; gap: .55rem;
-      margin-bottom: 2rem;
+    .sermon-player {
+      width: 100%;
+      accent-color: var(--green);
+      display: block;
+      margin-bottom: .9rem;
     }
-    .uc-dot {
-      width: 12px; height: 12px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: uc-pulse 1.4s ease-in-out infinite;
+    .sermon-actions {
+      display: flex; align-items: center; gap: .7rem; flex-wrap: wrap;
     }
-    .uc-dot:nth-child(2) { animation-delay: .22s; }
-    .uc-dot:nth-child(3) { animation-delay: .44s; }
-    @keyframes uc-pulse {
-      0%, 80%, 100% { transform: scale(.7); opacity: .5; }
-      40%            { transform: scale(1);  opacity: 1;   }
-    }
-
-    .uc-message {
-      font-size: clamp(.95rem,2.2vw,1.08rem);
-      color: var(--text);
-      line-height: 1.85;
-      max-width: 500px;
-      margin: 0 auto 1.8rem;
-    }
-
-    .uc-divider { height: 1px; background: var(--border); margin: 1.6rem 0; }
-
-    .uc-back-btn {
-      display: inline-flex; align-items: center; gap: .5rem;
+    .sermon-download {
+      display: inline-flex; align-items: center; gap: .4rem;
       background: var(--green-dark); color: var(--white);
-      text-decoration: none; font-size: .9rem; font-weight: 600;
-      padding: .7rem 1.6rem; border-radius: 100px;
+      text-decoration: none; font-size: .82rem; font-weight: 600;
+      padding: .45rem 1rem; border-radius: 100px;
       transition: background .2s, transform .15s;
     }
-    .uc-back-btn:hover { background: var(--green); transform: translateY(-2px); }
-    .uc-back-btn svg { width: 16px; height: 16px; fill: currentColor; }
+    .sermon-download:hover { background: var(--green); transform: translateY(-1px); }
+    .sermon-download svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .sermon-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+
+    .ia-info-card {
+      background: rgba(255,255,255,.88);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.4rem clamp(1.2rem,4vw,2rem);
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--green);
+    }
+    .ia-info-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--green-dark);
+      margin-bottom: .5rem;
+    }
+    .ia-info-card ol {
+      padding-left: 1.3rem;
+      font-size: .9rem; color: var(--text);
+      line-height: 1.8;
+    }
+    .ia-info-card a { color: var(--green); font-weight: 600; }
 
     /* ════ SCRIPTURE CARD ════ */
     .scripture-card {
@@ -299,37 +324,150 @@
   <!-- ═══ MAIN ═══ -->
   <main class="sermons-wrap" aria-label="Sermons">
 
-    <!-- Under Construction card -->
-    <div class="uc-card">
-
-      <div class="uc-card-head">
-        <div class="uc-icon-ring" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V6h10v2z"/></svg>
-        </div>
-        <div class="uc-eyebrow">Under Construction</div>
-        <h1 class="uc-title">Sermons</h1>
-        <p class="uc-subtitle">Coming Soon</p>
+    <!-- Header -->
+    <div class="sermon-header">
+      <div class="sermon-header-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V6h10v2z"/></svg>
       </div>
-
-      <div class="uc-card-body">
-
-        <div class="uc-dots" aria-hidden="true">
-          <span class="uc-dot"></span>
-          <span class="uc-dot"></span>
-          <span class="uc-dot"></span>
-        </div>
-
-        <p class="uc-message">We are currently building our sermon library. Check back soon to read and follow along with messages from Living Word Christian Church in Vernal, Utah.</p>
-
-        <div class="uc-divider"></div>
-
-        <a href="index.html" class="uc-back-btn">
-          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-          Back to Home
-        </a>
-
-      </div>
+      <div class="sermon-eyebrow">Audio Sermons</div>
+      <h1>Sermons</h1>
+      <p>Listen to messages from Living Word Christian Church</p>
     </div>
+
+    <!-- How to add sermons info card -->
+    <div class="ia-info-card">
+      <h3>How to add a sermon</h3>
+      <ol>
+        <li>Record the sermon as an MP3 file (e.g. <em>lwcc-sermon-2026-05-11.mp3</em>)</li>
+        <li>Go to <a href="https://archive.org/upload" target="_blank" rel="noopener noreferrer">archive.org/upload</a> and create a free account</li>
+        <li>Upload the MP3 — Archive.org gives you a permanent link like:<br>
+          <code>https://archive.org/download/your-identifier/filename.mp3</code></li>
+        <li>Copy that link into the <code>src</code> of a new sermon card below</li>
+      </ol>
+    </div>
+
+    <!-- ═══ SERMON: Jarrod Pierce ═══ -->
+    <article class="sermon-card">
+      <div class="sermon-card-inner">
+        <div class="sermon-date-pill">January 15, 2025</div>
+        <h2 class="sermon-title">Tithes, Offerings, and Sacrificial Giving</h2>
+        <div class="sermon-meta">
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Jarrod Pierce
+          </span>
+        </div>
+        <div class="sermon-divider"></div>
+        <audio class="sermon-player" controls preload="metadata"
+               src="https://archive.org/download/jarrod-pierce-tithes-offerings-and-sacrificial-giving/Jarrod%20Pierce%20-%20Tithes%2C%20Offerings%2C%20and%20Sacrificial%20Giving.mp3">
+          Your browser does not support audio playback.
+        </audio>
+        <div class="sermon-actions">
+          <a class="sermon-download"
+             href="https://archive.org/download/jarrod-pierce-tithes-offerings-and-sacrificial-giving/Jarrod%20Pierce%20-%20Tithes%2C%20Offerings%2C%20and%20Sacrificial%20Giving.mp3"
+             download>
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Download MP3
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══ SERMON 1 ═══ -->
+    <article class="sermon-card">
+      <div class="sermon-card-inner">
+        <div class="sermon-date-pill">May 11, 2026</div>
+        <h2 class="sermon-title">Walking by Faith, Not by Sight</h2>
+        <div class="sermon-meta">
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Pastor Shawn Sweeney
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+            2 Corinthians 5:7
+          </span>
+        </div>
+        <div class="sermon-divider"></div>
+        <!-- Replace the src URL below with your Internet Archive link -->
+        <audio class="sermon-player" controls preload="metadata"
+               src="https://archive.org/download/lwcc-sermon-2026-05-11/lwcc-sermon-2026-05-11.mp3">
+          Your browser does not support audio playback.
+        </audio>
+        <div class="sermon-actions">
+          <a class="sermon-download"
+             href="https://archive.org/download/lwcc-sermon-2026-05-11/lwcc-sermon-2026-05-11.mp3"
+             download>
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Download MP3
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══ SERMON 2 ═══ -->
+    <article class="sermon-card">
+      <div class="sermon-card-inner">
+        <div class="sermon-date-pill">May 4, 2026</div>
+        <h2 class="sermon-title">The Power of Prayer</h2>
+        <div class="sermon-meta">
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Pastor Shawn Sweeney
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+            Philippians 4:6–7
+          </span>
+        </div>
+        <div class="sermon-divider"></div>
+        <!-- Replace the src URL below with your Internet Archive link -->
+        <audio class="sermon-player" controls preload="metadata"
+               src="https://archive.org/download/lwcc-sermon-2026-05-04/lwcc-sermon-2026-05-04.mp3">
+          Your browser does not support audio playback.
+        </audio>
+        <div class="sermon-actions">
+          <a class="sermon-download"
+             href="https://archive.org/download/lwcc-sermon-2026-05-04/lwcc-sermon-2026-05-04.mp3"
+             download>
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Download MP3
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══ SERMON 3 ═══ -->
+    <article class="sermon-card">
+      <div class="sermon-card-inner">
+        <div class="sermon-date-pill">April 27, 2026</div>
+        <h2 class="sermon-title">Grace Upon Grace</h2>
+        <div class="sermon-meta">
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Pastor Shawn Sweeney
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+            John 1:16
+          </span>
+        </div>
+        <div class="sermon-divider"></div>
+        <!-- Replace the src URL below with your Internet Archive link -->
+        <audio class="sermon-player" controls preload="metadata"
+               src="https://archive.org/download/lwcc-sermon-2026-04-27/lwcc-sermon-2026-04-27.mp3">
+          Your browser does not support audio playback.
+        </audio>
+        <div class="sermon-actions">
+          <a class="sermon-download"
+             href="https://archive.org/download/lwcc-sermon-2026-04-27/lwcc-sermon-2026-04-27.mp3"
+             download>
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Download MP3
+          </a>
+        </div>
+      </div>
+    </article>
 
     <!-- Scripture -->
     <div class="scripture-card">
