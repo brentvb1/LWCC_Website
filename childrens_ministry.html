@@ -444,6 +444,7 @@
     body { position: relative; }
     .page-hero-label { position: absolute; top: calc(var(--nav-h) + 4vw); left: 0; right: 0; text-align: center; pointer-events: none; z-index: 1; }
     .page-hero-label h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.6); letter-spacing: .04em; }
+    @media (max-width: 700px) { .page-hero-label { display: none; } }
   </style>
 </head>
 <body>
