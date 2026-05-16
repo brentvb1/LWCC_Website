@@ -406,9 +406,11 @@
   const fbBody = document.querySelector('.fb-card-body');
   let rafId = null;
   let isHovering = false;
+  let userScrolling = false;
+  let userScrollTimer = null;
 
   function tick() {
-    if (!isHovering) return;
+    if (!isHovering || userScrolling) return;
     if (fbBody.scrollTop >= fbBody.scrollHeight - fbBody.clientHeight) return;
     fbBody.scrollTop += 0.8;
     rafId = requestAnimationFrame(tick);
@@ -422,6 +424,27 @@
     isHovering = false;
     cancelAnimationFrame(rafId);
   });
+
+  // Intercept wheel events so the card scrolls instead of the page,
+  // and only pass through to the page when the card is truly at its limit.
+  fbBody.addEventListener('wheel', (e) => {
+    const atTop    = fbBody.scrollTop <= 0;
+    const atBottom = fbBody.scrollTop >= fbBody.scrollHeight - fbBody.clientHeight - 1;
+
+    // Pause auto-scroll while the user is manually scrolling; resume after idle.
+    userScrolling = true;
+    clearTimeout(userScrollTimer);
+    userScrollTimer = setTimeout(() => {
+      userScrolling = false;
+      if (isHovering) rafId = requestAnimationFrame(tick);
+    }, 600);
+
+    // Let the page scroll only when the card cannot scroll further in that direction.
+    if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) return;
+
+    e.preventDefault();
+    fbBody.scrollTop += e.deltaY;
+  }, { passive: false });
 
   // ════ PATCH FB IFRAMES FOR IN-PAGE VIDEO PLAYBACK ════
   // Facebook SDK injects iframes without media permissions; this observer adds them.
