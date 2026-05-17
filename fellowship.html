@@ -714,14 +714,14 @@
             <div>
               <div class="info-pill-label">Months</div>
               <div class="info-pill-value">Quarterly Gatherings</div>
-              <div class="info-pill-sub">March · June · September · December</div>
+              <div class="info-pill-sub">May · August · November · February</div>
             </div>
           </div>
         </div>
 
         <div class="fellow-divider"></div>
 
-        <p class="fellow-body-text">Every March, June, September and December, on the 3rd Sunday right after Church Service. This is a time for all of us to get together, to talk, eat and have fun!</p>
+        <p class="fellow-body-text">Every May, August, November and February, on the 3rd Sunday right after Church Service. This is a time for all of us to get together, to talk, eat and have fun!</p>
 
       </div>
     </div>
@@ -969,7 +969,11 @@
   document.addEventListener('keydown', e => { if (e.key==='Escape') allDropdowns.forEach(d => { d.close(); d.btn.focus(); }); });
 
   // ════ FELLOWSHIP CALENDAR ════
-  const FELLOW_MONTHS = new Set([2, 5, 8, 11]); // March=2, June=5, Sept=8, Dec=11
+  const FELLOW_MONTHS = new Set([1, 4, 7, 10]); // Feb=1, May=4, Aug=7, Nov=10
+  const FELLOW_START = new Date(2026, 4, 1); // starts May 2026
+  function isFellowMonth(year, month) {
+    return FELLOW_MONTHS.has(month) && new Date(year, month, 1) >= FELLOW_START;
+  }
   const MONTH_NAMES = ['January','February','March','April','May','June',
                        'July','August','September','October','November','December'];
   const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -985,8 +989,9 @@
     const out = [];
     let y = today.getFullYear();
     for (let tries = 0; tries < 10 && out.length < count; tries++, y++) {
-      for (const m of [2, 5, 8, 11]) {
+      for (const m of [1, 4, 7, 10]) {
         if (out.length >= count) break;
+        if (!isFellowMonth(y, m)) continue;
         const d = getThirdSunday(y, m);
         const dt = new Date(y, m, d);
         if (dt >= today) out.push(dt);
@@ -1003,7 +1008,7 @@
     document.getElementById('calMonthLabel').textContent = `${MONTH_NAMES[month]} ${year}`;
 
     const banner = document.getElementById('calFellowBanner');
-    if (FELLOW_MONTHS.has(month)) {
+    if (isFellowMonth(year, month)) {
       const ts = getThirdSunday(year, month);
       document.getElementById('calFellowBannerText').textContent =
         `Fellowship this month — ${MONTH_NAMES[month]} ${ts}, ${year}`;
@@ -1019,7 +1024,7 @@
     const firstDow = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const prevMonthDays = new Date(year, month, 0).getDate();
-    const fellowDay = FELLOW_MONTHS.has(month) ? getThirdSunday(year, month) : -1;
+    const fellowDay = isFellowMonth(year, month) ? getThirdSunday(year, month) : -1;
 
     for (let i = firstDow - 1; i >= 0; i--) {
       const el = document.createElement('div');
