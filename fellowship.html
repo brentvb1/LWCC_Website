@@ -546,6 +546,46 @@
       font-style: normal;
     }
 
+    /* ════ DAY MODAL ════ */
+    .day-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.52); z-index: 500;
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+      opacity: 0; pointer-events: none; transition: opacity .22s;
+    }
+    .day-overlay.open { opacity: 1; pointer-events: auto; }
+    .day-modal {
+      background: var(--white); border-radius: var(--radius); width: 100%; max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.28); overflow: hidden;
+      transform: translateY(14px) scale(.97); transition: transform .22s;
+    }
+    .day-overlay.open .day-modal { transform: none; }
+    .day-modal-head {
+      background: var(--green-dark); padding: 1.3rem 1.5rem;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    }
+    .day-modal-date { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--white); }
+    .day-modal-body { padding: 1.3rem 1.5rem 1.7rem; }
+    .day-event-item {
+      display: flex; align-items: flex-start; gap: .85rem;
+      padding: .8rem 0; border-bottom: 1px solid var(--border);
+    }
+    .day-event-item:last-child { border-bottom: none; }
+    .day-event-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .day-event-name { font-size: .95rem; font-weight: 600; color: var(--green-dark); margin-bottom: .15rem; }
+    .day-event-time { font-size: .8rem; color: var(--muted); }
+    .day-event-note { font-size: .8rem; color: #0891B2; font-weight: 600; margin-top: .2rem; }
+    .day-no-events { font-size: .9rem; color: var(--muted); font-style: italic; padding: .5rem 0; }
+    .modal-x {
+      background: rgba(255,255,255,.15); border: none; border-radius: 50%;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; transition: background .18s;
+    }
+    .modal-x:hover { background: rgba(255,255,255,.28); }
+    .modal-x svg { width: 15px; height: 15px; fill: var(--white); }
+
+    .cal-day.cur-month { cursor: pointer; }
+    .cal-day.cur-month:not(.fellowship-day):not(.today):hover { background: rgba(45,106,79,.08); }
+
     /* ════ MODAL ════ */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .25s; }
     .modal-overlay.open { opacity: 1; pointer-events: auto; }
@@ -891,6 +931,19 @@
     </div>
   </footer>
 
+  <!-- ═══ DAY DETAIL MODAL ═══ -->
+  <div class="day-overlay" id="dayOverlay" role="dialog" aria-modal="true" aria-labelledby="dayTitle">
+    <div class="day-modal">
+      <div class="day-modal-head">
+        <div class="day-modal-date" id="dayTitle"></div>
+        <button class="modal-x" id="dayClose" aria-label="Close">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+      <div class="day-modal-body" id="dayBody"></div>
+    </div>
+  </div>
+
   <!-- ═══ ABOUT US MODAL ═══ -->
   <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-label="About Us">
     <div class="modal">
@@ -966,7 +1019,12 @@
   makeDropdown('ministriesDropdown','ministriesToggle','ministries-menu');
   makeDropdown('resourcesDropdown','resourcesToggle','resources-menu');
   document.addEventListener('click', () => allDropdowns.forEach(d => d.close()));
-  document.addEventListener('keydown', e => { if (e.key==='Escape') allDropdowns.forEach(d => { d.close(); d.btn.focus(); }); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      allDropdowns.forEach(d => { d.close(); d.btn.focus(); });
+      closeDayModal();
+    }
+  });
 
   // ════ FELLOWSHIP CALENDAR ════
   const FELLOW_MONTHS = new Set([1, 4, 7, 10]); // Feb=1, May=4, Aug=7, Nov=10
@@ -1036,12 +1094,18 @@
     for (let d = 1; d <= daysInMonth; d++) {
       const el = document.createElement('div');
       const dt = new Date(year, month, d);
-      let cls = 'cal-day';
+      let cls = 'cal-day cur-month';
       if (dt.getTime() === today.getTime()) cls += ' today';
       if (d === fellowDay) cls += ' fellowship-day';
       el.className = cls;
       el.textContent = d;
-      if (d === fellowDay) el.setAttribute('title', 'Fellowship Day!');
+      el.setAttribute('role', 'button');
+      el.setAttribute('tabindex', '0');
+      const isFellow = (d === fellowDay);
+      el.addEventListener('click', () => openDayModal(year, month, d, isFellow));
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDayModal(year, month, d, isFellow); }
+      });
       grid.appendChild(el);
     }
 
@@ -1084,6 +1148,54 @@
   });
 
   renderCal(calYear, calMonth);
+
+  // ════ DAY MODAL ════
+  const SPECIAL = {
+    '2026-4-17': { note: 'Food: BBQ' },
+  };
+
+  function openDayModal(year, month, day, isFellow) {
+    const dow = new Date(year, month, day).getDay();
+    document.getElementById('dayTitle').textContent =
+      `${DAY_NAMES[dow]}, ${MONTH_NAMES[month]} ${day}, ${year}`;
+
+    const body = document.getElementById('dayBody');
+    body.innerHTML = '';
+
+    if (!isFellow) {
+      const p = document.createElement('p');
+      p.className = 'day-no-events';
+      p.textContent = 'No fellowship events scheduled for this day.';
+      body.appendChild(p);
+    } else {
+      const specialKey = `${year}-${month}-${day}`;
+      const special = SPECIAL[specialKey] || {};
+      const row = document.createElement('div');
+      row.className = 'day-event-item';
+      row.innerHTML = `<div class="day-event-dot" style="background:#0891B2"></div>
+        <div>
+          <div class="day-event-name">Fellowship Gathering</div>
+          <div class="day-event-time">After Service ~12:00 PM</div>
+          ${special.note ? `<div class="day-event-note">${special.note}</div>` : ''}
+        </div>`;
+      body.appendChild(row);
+    }
+
+    const overlay = document.getElementById('dayOverlay');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('dayClose').focus();
+  }
+
+  function closeDayModal() {
+    document.getElementById('dayOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('dayClose').addEventListener('click', closeDayModal);
+  document.getElementById('dayOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('dayOverlay')) closeDayModal();
+  });
 
   // ════ LIGHTBOX ════
   const photos = [
