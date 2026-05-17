@@ -165,25 +165,77 @@
 
     .sermon-divider { height: 1px; background: var(--border); margin: 1rem 0; }
 
-    .ia-info-card {
-      background: rgba(255,255,255,.88);
+    /* ════ YEAR SECTIONS ════ */
+    .year-section {
+      margin-bottom: 1rem;
+    }
+
+    .year-heading {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      background: var(--green-dark);
+      color: var(--white);
+      border: none;
       border-radius: var(--radius);
+      padding: 1rem 1.4rem;
+      width: 100%;
+      cursor: pointer;
+      text-align: left;
       box-shadow: var(--shadow);
-      padding: 1.4rem clamp(1.2rem,4vw,2rem);
-      margin-bottom: 1.5rem;
-      border-left: 4px solid var(--green);
+      transition: background .2s, border-radius .3s;
+      margin-bottom: 0;
     }
-    .ia-info-card h3 {
+
+    .year-heading:hover { background: #0437a8; }
+
+    .year-section.open .year-heading {
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .year-heading-label {
       font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; color: var(--green-dark);
-      margin-bottom: .5rem;
+      font-size: 1.35rem;
+      font-weight: 700;
+      flex: 1;
     }
-    .ia-info-card ol {
-      padding-left: 1.3rem;
-      font-size: .9rem; color: var(--text);
-      line-height: 1.8;
+
+    .year-heading-count {
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.28);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .2rem .7rem;
+      border-radius: 100px;
     }
-    .ia-info-card a { color: var(--green); font-weight: 600; }
+
+    .year-heading-chevron {
+      width: 20px; height: 20px;
+      fill: rgba(255,255,255,.8);
+      flex-shrink: 0;
+      transition: transform .3s ease;
+    }
+
+    .year-section.open .year-heading-chevron {
+      transform: rotate(180deg);
+    }
+
+    .year-cards {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+      background: transparent;
+    }
+
+    .year-section.open .year-cards {
+      max-height: 9999px;
+    }
+
+    .year-cards-inner {
+      padding-top: .5rem;
+    }
 
     /* ════ SCRIPTURE CARD ════ */
     .scripture-card {
@@ -334,32 +386,45 @@
       <p>Listen to messages from Living Word Christian Church</p>
     </div>
 
-    <!-- ═══ SERMON: Jarrod Pierce ═══ -->
-    <article class="sermon-card">
-      <div class="sermon-card-inner">
-        <div class="sermon-date-pill">January 15, 2025</div>
-        <h2 class="sermon-title">Tithes, Offerings, and Sacrificial Giving</h2>
-        <div class="sermon-meta">
-          <span>
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            Pastor Jarrod Pierce
-          </span>
-        </div>
-        <div class="sermon-divider"></div>
-        <audio class="sermon-player" controls preload="metadata"
-               src="https://archive.org/download/jarrod-pierce-tithes-offerings-and-sacrificial-giving/Jarrod%20Pierce%20-%20Tithes%2C%20Offerings%2C%20and%20Sacrificial%20Giving.mp3">
-          Your browser does not support audio playback.
-        </audio>
-        <div class="sermon-actions">
-          <a class="sermon-download"
-             href="https://archive.org/download/jarrod-pierce-tithes-offerings-and-sacrificial-giving/Jarrod%20Pierce%20-%20Tithes%2C%20Offerings%2C%20and%20Sacrificial%20Giving.mp3"
-             download>
-            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-            Download MP3
-          </a>
+    <!-- ═══ 2025 ═══ -->
+    <div class="year-section open" id="year-2025">
+      <button class="year-heading" aria-expanded="true" aria-controls="year-2025-cards">
+        <span class="year-heading-label">2025</span>
+        <span class="year-heading-count">1 sermon</span>
+        <svg class="year-heading-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+      </button>
+      <div class="year-cards" id="year-2025-cards">
+        <div class="year-cards-inner">
+
+          <article class="sermon-card">
+            <div class="sermon-card-inner">
+              <div class="sermon-date-pill">January 15, 2025</div>
+              <h2 class="sermon-title">Tithes, Offerings, and Sacrificial Giving</h2>
+              <div class="sermon-meta">
+                <span>
+                  <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                  Pastor Jarrod Pierce
+                </span>
+              </div>
+              <div class="sermon-divider"></div>
+              <audio class="sermon-player" controls preload="metadata"
+                     src="https://archive.org/download/jarrod-pierce-tithes-offerings-and-sacrificial-giving/Jarrod%20Pierce%20-%20Tithes%2C%20Offerings%2C%20and%20Sacrificial%20Giving.mp3">
+                Your browser does not support audio playback.
+              </audio>
+              <div class="sermon-actions">
+                <a class="sermon-download"
+                   href="https://archive.org/download/jarrod-pierce-tithes-offerings-and-sacrificial-giving/Jarrod%20Pierce%20-%20Tithes%2C%20Offerings%2C%20and%20Sacrificial%20Giving.mp3"
+                   download>
+                  <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                  Download MP3
+                </a>
+              </div>
+            </div>
+          </article>
+
         </div>
       </div>
-    </article>
+    </div>
 
     <!-- Scripture -->
     <div class="scripture-card">
@@ -497,6 +562,15 @@
   makeDropdown('resourcesDropdown','resourcesToggle','resources-menu');
   document.addEventListener('click', () => allDropdowns.forEach(d => d.close()));
   document.addEventListener('keydown', e => { if (e.key==='Escape') allDropdowns.forEach(d => { d.close(); d.btn.focus(); }); });
+
+  // ════ YEAR SECTIONS ════
+  document.querySelectorAll('.year-heading').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.closest('.year-section');
+      const isOpen  = section.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(isOpen));
+    });
+  });
 
   // ════ ABOUT MODAL ════
   const aboutModal  = document.getElementById('aboutModal');
