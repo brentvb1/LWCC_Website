@@ -285,6 +285,7 @@
     }
     .day-event-name { font-size: .95rem; font-weight: 600; color: var(--green-dark); margin-bottom: .15rem; }
     .day-event-time { font-size: .8rem; color: var(--muted); }
+    .day-event-note { font-size: .8rem; color: var(--green); font-weight: 600; margin-top: .2rem; }
     .day-no-events { font-size: .9rem; color: var(--muted); font-style: italic; padding: .5rem 0; }
     .modal-x {
       background: rgba(255,255,255,.15); border: none; border-radius: 50%;
@@ -744,6 +745,11 @@
     FELLOWSHIP:  { id:'fellowship',  label:'Fellowship Gathering', time:'After Service ~12:00 PM', color:'#0891B2' },
   };
 
+  // Date-specific event notes — keyed "year-month-day" (month is 0-based)
+  const SPECIAL = {
+    '2026-4-17': { fellowship: { note: 'Food: BBQ' } },
+  };
+
   const ANNOUNCEMENTS = [
     {
       color: '#E85555',
@@ -842,6 +848,14 @@
     }
 
     if (isFellowshipSunday(year, month, day)) evts.push(EVT.FELLOWSHIP);
+
+    const specialKey = `${year}-${month}-${day}`;
+    if (SPECIAL[specialKey]) {
+      return evts.map(e => {
+        const override = SPECIAL[specialKey][e.id];
+        return override ? Object.assign({}, e, override) : e;
+      });
+    }
 
     return evts;
   }
@@ -990,7 +1004,7 @@
         const row = document.createElement('div');
         row.className = 'day-event-item';
         row.innerHTML = `<div class="day-event-dot" style="background:${e.color}"></div>
-          <div><div class="day-event-name">${e.label}</div><div class="day-event-time">${e.time}</div></div>`;
+          <div><div class="day-event-name">${e.label}</div><div class="day-event-time">${e.time}</div>${e.note ? `<div class="day-event-note">${e.note}</div>` : ''}</div>`;
         body.appendChild(row);
       });
     }
